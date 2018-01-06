@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1515252520 source:c:\users\eduard stetco\desktop\naruto_rin_edition\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"utilities.h"
+	"animation.h"
+	"player.h"
+	"SDL.h"
+	"SDL_image.h"
+
+1515186597 c:\users\eduard stetco\desktop\naruto_rin_edition\utilities.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<stdbool.h>
+	"SDL.h"
+
+1515187553 source:c:\users\eduard stetco\desktop\naruto_rin_edition\utilities.c
+	"utilities.h"
+
+1515178369 c:\users\eduard stetco\desktop\naruto_rin_edition\settings.h
+
+1515251931 source:c:\users\eduard stetco\desktop\naruto_rin_edition\settings.c
+
+1515252369 c:\users\eduard stetco\desktop\naruto_rin_edition\animation.h
+
+1515252369 source:c:\users\eduard stetco\desktop\naruto_rin_edition\animation.c
+	"animation.h"
+
+1515202025 source:c:\users\eduard stetco\desktop\naruto_rin_edition\engine.c
+	"engine.h"
+
+1515202025 c:\users\eduard stetco\desktop\naruto_rin_edition\engine.h
+	<SDL.h>
+
+1515249418 c:\users\eduard stetco\desktop\naruto_rin_edition\player.h
+	"SDL.h"
+	"utilities.h"
+
+1515251090 source:c:\users\eduard stetco\desktop\naruto_rin_edition\player.c
+	"player.h"
+
