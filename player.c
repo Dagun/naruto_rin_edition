@@ -1,6 +1,10 @@
 #include "player.h"
 
 struct player {
+    //int neueVariable;
+    //int health;
+    float frameTime;
+    bool left;
     float moveSpeed;
     int curDoing;
     int textureHeight;
@@ -12,6 +16,8 @@ struct player {
 
 PPlayer player_create() {
     PPlayer ply = (PPlayer) malloc(sizeof(struct player));
+    //player_setHealth(ply,100);
+//    player_setDead(ply,0);
     player_setMoveSpeed(ply,0);
     player_setCurDoing(ply,0);
     player_setTextureHeight(ply,0);
@@ -27,6 +33,42 @@ PPlayer player_create() {
     player_setPlayerRectH(ply,0);
 
     return ply;
+}
+/*
+void player_setDead(PPlayer player, bool value) {
+    player->playerDead = value;
+}
+
+bool player_getDead(PPlayer player) {
+    return player->playerDead;
+}
+
+void player_setHealth(PPlayer player,int value) {
+    player->health = value;
+}
+
+int player_getHealth(PPlayer player) {
+    return player->health;
+}
+*/
+PPlayer player_getPFrameTime(PPlayer player) {
+    return &(player->frameTime);
+}
+
+void player_setFrameTime(PPlayer player, float value) {
+    player->frameTime=value;
+}
+
+float player_getFrameTime(PPlayer player) {
+    return player->frameTime;
+}
+
+void player_setLeft(PPlayer player, bool value) {
+    player->left = value;
+}
+
+bool player_getLeft(PPlayer player) {
+    return player->left;
 }
 
 void player_setPlayerRectX(PPlayer player,int value) {

@@ -5,39 +5,35 @@
 #include "utilities.h"
 #include "animation.h"
 #include "player.h"
+#include "object.h"
 
 #include "SDL.h"
 #include "SDL_image.h"
 
+//SCREEN
 extern const int height;
 extern const int width;
 
-extern const int frameWidth;
-extern const int frameHeight;
+//RIN CHARACTER
+extern const int rin_frameWidth;
+extern const int rin_frameHeight;
+extern const int rin_textureWidth;
+extern const int rin_textureHeight;
+extern const int rin_characterWidth;
+extern const int rin_characterHeight;
 
-extern const int frameHeightRiver;
-extern const int frameWidthRiver;
+//RIVER BACKGROUND1
+extern const int river_frameWidth;
+extern const int river_frameHeight;
+extern const int river_textureHeight;
+extern const int river_textureWidth;
+extern const int river_Height;
+extern const int river_Width;
+
 
 bool initializedSucces = true;
 
 int main(int argc, char* argv[]) {
-    int textureWidth = 100;
-    int textureHeight = 2200;
-    int characterWidth = 100;
-    int characterHeight = 100;
-
-    int riverHeight = 333;
-    int riverWidth = 704;
-    int riverSizeHeight = 300;
-    int riverSizeWidth = 2000;
-
-
-    //int curDoing = 4;
-
-    bool left = false;
-
-    float frameTime = 0;
-    float frameTime2 = 0;
     int prevTime = 0;
     int currentTime = 0;
     float deltaTime = 0;
@@ -64,34 +60,32 @@ int main(int argc, char* argv[]) {
     }
 
     PPlayer player1 = player_create();
-    player_setTextureWidth(player1,textureWidth);
-    player_setTextureHeight(player1,textureHeight);
-    player_setPlayerRectW(player1,frameWidth);
-    player_setPlayerRectH(player1,frameWidth);
-    player_setPlayerPositionW(player1,characterWidth);
-    player_setPlayerPositionH(player1,characterHeight);
+    player_setTextureWidth(player1,rin_textureWidth);
+    player_setTextureHeight(player1,rin_textureHeight);
+    player_setPlayerRectW(player1,rin_frameWidth);
+    player_setPlayerRectH(player1,rin_frameWidth);
+    player_setPlayerPositionW(player1,rin_characterWidth);
+    player_setPlayerPositionH(player1,rin_characterHeight);
     player_setMoveSpeed(player1,300.0f);
     player_setPlayerPositionX(player1,0);
     player_setPlayerPositionY(player1,405);
-    player_setTexturePath(player1,renderer,"images/rin/rin_nohara.png");
+    player_setTexturePath(player1,renderer,"images/rin/rin_nohararight.png");
 
-    PPlayer player2 = player_create();
-    player_setTextureWidth(player2,riverWidth);
-    player_setTextureHeight(player2,riverHeight);
-    player_setPlayerRectW(player2,frameWidthRiver);
-    player_setPlayerRectH(player2,frameHeightRiver);
-    player_setPlayerPositionW(player2,riverSizeWidth);
-    player_setPlayerPositionH(player2,riverSizeHeight);
-    player_setPlayerPositionX(player2,0);
-    player_setPlayerPositionY(player2,800);
-    player_setTexturePath(player2,renderer,"images/background1/river.png");
+    PObject river = object_create();
+    object_setTextureWidth(river,river_textureWidth);
+    object_setTextureHeight(river,river_textureHeight);
+    object_setObjectRectW(river,river_frameWidth);
+    object_setObjectRectH(river,river_frameHeight);
+    object_setObjectPositionW(river,river_Width);
+    object_setObjectPositionH(river,river_Height);
+    object_setObjectPositionX(river,0);
+    object_setObjectPositionY(river,800);
+    object_setTexturePath(river,renderer,"images/background1/river.png");
 
 
     bool running = true;
 
     while(running && initializedSucces == true) {
-        int currentX = 0;
-        int currentY = 0;
         prevTime = currentTime;
         currentTime = SDL_GetTicks();
         deltaTime = (currentTime - prevTime) / 1000.0f;
@@ -109,49 +103,60 @@ int main(int argc, char* argv[]) {
                 switch(event.key.keysym.sym) {
                 case SDLK_SPACE:
                         break;
+                case SDLK_u:
+                    //player_setHealth(player1,player_getHealth(player1)-10);
+                    break;
                 }
             } else if(event.type == SDL_MOUSEMOTION) {
                // printf("X: %d | Y: %d\n",event.motion.x, event.motion.y);
             }
         }
         if(state[SDL_SCANCODE_D]) {
-            currentX = player_getPlayerPositionX(player1) + (player_getMoveSpeed(player1) * deltaTime);
+            int currentX = player_getPlayerPositionX(player1) + (player_getMoveSpeed(player1) * deltaTime);
             player_setPlayerPositionX(player1,currentX);
             player_setCurDoing(player1,1);
-            left = false;
+            player_setLeft(player1,false);
         } else if(state[SDL_SCANCODE_A]) {
-            currentX = player_getPlayerPositionX(player1) - (player_getMoveSpeed(player1) * deltaTime);
+            int currentX = player_getPlayerPositionX(player1) - (player_getMoveSpeed(player1) * deltaTime);
             player_setPlayerPositionX(player1,currentX);
             player_setCurDoing(player1,0);
-            left = true;
+            player_setLeft(player1,true);
         } else if(!state[SDL_SCANCODE_A] && !state[SDL_SCANCODE_D]) {
-            if(left==true) {
+            if(player_getLeft(player1)==true) {
                player_setCurDoing(player1,2);
-            } else if(left == false) {
+            } else if(player_getLeft(player1) == false) {
                 player_setCurDoing(player1,3);
             }
         }
-
+        /*if(player_getHealth(player1)==0) {
+            if(player_getPlayerPositionY(player1)==1800) {
+                player_setFrameTime(player1,0);
+                player_setDead(player1,true);
+            }
+            player_setCurDoing(player1,4);
+        } else {
+            printf("%d\n",player_getHealth(player1));
+        }*/
         //engine_gravity();
-
-        frameTime = frameTime + deltaTime;
-        frameTime2 = frameTime2 + deltaTime;
+        object_setFrameTime(river,object_getFrameTime(river)+deltaTime);
+        player_setFrameTime(player1, player_getFrameTime(player1)+deltaTime);
         switch(player_getCurDoing(player1)) {
-        case 0: animation(&frameTime,player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),6,-100,500,0.15f,frameHeight); break;
-        case 1: animation(&frameTime,player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),6,500,1100,0.15f,frameHeight); break;
-        case 2: animation(&frameTime,player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,1100,1600,0.25f,frameHeight); break;
-        case 3: animation(&frameTime,player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,1600,2100,0.25f,frameHeight); break;
+            case 0: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight); break;
+            case 1: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight); break;
+            case 2: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,5200,5700,0.25f,rin_frameHeight); break;
+            case 3: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,5200,5700,0.25f,rin_frameHeight); break;
+            case 4: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,1400,1800,0.15f,rin_frameHeight); break;
         }
-
-        animation(&frameTime2,player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),3,-111,222,0.5f,frameHeightRiver);
+        animation_create(object_getPFrameTime(river),object_getObjectRectPY(river),object_getObjectRectPX(river),3,-111,222,0.5f,river_frameHeight);
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer,background,NULL,NULL);
-        SDL_RenderCopy(renderer,player_getTexture(player1),player_getPlayerRect(player1),player_getPlayerPosition(player1));
-        SDL_RenderCopy(renderer,player_getTexture(player2),player_getPlayerRect(player2),player_getPlayerPosition(player2));
+        animation_show(renderer,player1,player_getLeft(player1));
+        animation_show(renderer,river,object_getLeft(river));
         SDL_RenderPresent(renderer);
     }
     player_playerRemove(player1);
+    object_objectRemove(river);
     IMG_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
