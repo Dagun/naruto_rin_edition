@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
+#include "SDL.h"
+#include "SDL_image.h"
 #include "utilities.h"
 #include "animation.h"
 #include "player.h"
 #include "object.h"
 
-#include "SDL.h"
-#include "SDL_image.h"
+
 
 //SCREEN
 extern const int height;
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
         initializedSucces = false;
     }
 
-    SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_FULLSCREEN);
+    SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_RESIZABLE);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_Event event;
 
@@ -102,41 +102,57 @@ int main(int argc, char* argv[]) {
             } else if(event.type == SDL_KEYUP) {
                 switch(event.key.keysym.sym) {
                 case SDLK_SPACE:
+                     if(player_getDead(player1)==false) {
+
+                     }
                         break;
                 case SDLK_u:
-                    //player_setHealth(player1,player_getHealth(player1)-10);
+                    player_setHealth(player1,player_getHealth(player1)-10);
                     break;
                 }
             } else if(event.type == SDL_MOUSEMOTION) {
-               // printf("X: %d | Y: %d\n",event.motion.x, event.motion.y);
+                printf("X: %d | Y: %d\n",event.motion.x, event.motion.y);
             }
         }
         if(state[SDL_SCANCODE_D]) {
-            int currentX = player_getPlayerPositionX(player1) + (player_getMoveSpeed(player1) * deltaTime);
-            player_setPlayerPositionX(player1,currentX);
-            player_setCurDoing(player1,1);
-            player_setLeft(player1,false);
+            if(player_getDead(player1)==false) {
+                int currentX = player_getPlayerPositionX(player1) + (player_getMoveSpeed(player1) * deltaTime);
+                player_setPlayerPositionX(player1,currentX);
+                player_setCurDoing(player1,1);
+                player_setLeft(player1,false);
+            }
         } else if(state[SDL_SCANCODE_A]) {
-            int currentX = player_getPlayerPositionX(player1) - (player_getMoveSpeed(player1) * deltaTime);
-            player_setPlayerPositionX(player1,currentX);
-            player_setCurDoing(player1,0);
-            player_setLeft(player1,true);
+            if(player_getDead(player1)==false) {
+                int currentX = player_getPlayerPositionX(player1) - (player_getMoveSpeed(player1) * deltaTime);
+                player_setPlayerPositionX(player1,currentX);
+                player_setCurDoing(player1,0);
+                player_setLeft(player1,true);
+            }
         } else if(!state[SDL_SCANCODE_A] && !state[SDL_SCANCODE_D]) {
-            if(player_getLeft(player1)==true) {
-               player_setCurDoing(player1,2);
-            } else if(player_getLeft(player1) == false) {
-                player_setCurDoing(player1,3);
+             if(player_getDead(player1)==false) {
+                    if(player_getLeft(player1)==true) {
+                       player_setCurDoing(player1,2);
+                    } else if(player_getLeft(player1) == false) {
+                        player_setCurDoing(player1,3);
+                    }
+            }
+        } else if(!state[SDL_SCANCODE_A] && state[SDL_SCANCODE_D] && state[SDL_SCANCODE_LSHIFT]) {
+            if(player_getDead(player1)==false) {
+                int currentX = player_getPlayerPositionX(player1) + (player_getMoveSpeed(player1)+150 * deltaTime);
+                player_setPlayerPositionX(player1,currentX);
+                player_setCurDoing(player1,5);
+                player_setLeft(player1,false);
+                printf("YAY");
             }
         }
-        /*if(player_getHealth(player1)==0) {
+        if(player_getHealth(player1)==0) {
             if(player_getPlayerPositionY(player1)==1800) {
                 player_setFrameTime(player1,0);
-                player_setDead(player1,true);
             }
             player_setCurDoing(player1,4);
         } else {
-            printf("%d\n",player_getHealth(player1));
-        }*/
+           // printf("%d\n",player_getHealth(player1));
+        }
         //engine_gravity();
         object_setFrameTime(river,object_getFrameTime(river)+deltaTime);
         player_setFrameTime(player1, player_getFrameTime(player1)+deltaTime);
@@ -145,7 +161,8 @@ int main(int argc, char* argv[]) {
             case 1: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight); break;
             case 2: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,5200,5700,0.25f,rin_frameHeight); break;
             case 3: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,5200,5700,0.25f,rin_frameHeight); break;
-            case 4: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,1400,1800,0.15f,rin_frameHeight); break;
+            case 4: if(player_getDead(player1)==false || player_getPlayerRectY(player1) != 1800) { animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,1400,1800,0.1f,rin_frameHeight); } player_setDead(player1,true); break;
+            case 5: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,3000,3500,0.25f,rin_frameHeight); break;
         }
         animation_create(object_getPFrameTime(river),object_getObjectRectPY(river),object_getObjectRectPX(river),3,-111,222,0.5f,river_frameHeight);
 
@@ -156,11 +173,17 @@ int main(int argc, char* argv[]) {
         SDL_RenderPresent(renderer);
     }
     player_playerRemove(player1);
+    player1 = NULL;
+
     object_objectRemove(river);
+    river = NULL;
+
     IMG_Quit();
     SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(background);
     SDL_DestroyWindow(window);
 
+    background = NULL;
     renderer = NULL;
     window = NULL;
 

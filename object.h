@@ -34,6 +34,10 @@ void object_setTextureWidth(PObject object, int value);
 void object_setTexture(PObject object, SDL_Texture* value);
 void object_setObjectRect(PObject object, SDL_Rect value);
 void object_setObjectPosition(PObject object, SDL_Rect value);
+void object_setObjectPositionY(PObject object, int value);
+void object_setObjectPositionX(PObject object, int value);
+void object_setObjectPositionW(PObject object, int value);
+void object_setObjectPositionH(PObject object, int value);
 void object_setTexturePath(PObject object, SDL_Renderer* renderer, char* path);
 
 void object_objectRemove(PObject object);

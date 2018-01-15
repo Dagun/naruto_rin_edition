@@ -1,8 +1,6 @@
 #include "player.h"
 
 struct player {
-    //int neueVariable;
-    //int health;
     float frameTime;
     bool left;
     float moveSpeed;
@@ -12,12 +10,14 @@ struct player {
     SDL_Texture *texture;
     SDL_Rect playerRect;
     SDL_Rect playerPosition;
+    bool playerDead;
+    int health;
 };
 
 PPlayer player_create() {
     PPlayer ply = (PPlayer) malloc(sizeof(struct player));
-    //player_setHealth(ply,100);
-//    player_setDead(ply,0);
+    player_setHealth(ply,100);
+    player_setDead(ply,0);
     player_setMoveSpeed(ply,0);
     player_setCurDoing(ply,0);
     player_setTextureHeight(ply,0);
@@ -34,7 +34,7 @@ PPlayer player_create() {
 
     return ply;
 }
-/*
+
 void player_setDead(PPlayer player, bool value) {
     player->playerDead = value;
 }
@@ -50,7 +50,7 @@ void player_setHealth(PPlayer player,int value) {
 int player_getHealth(PPlayer player) {
     return player->health;
 }
-*/
+
 PPlayer player_getPFrameTime(PPlayer player) {
     return &(player->frameTime);
 }

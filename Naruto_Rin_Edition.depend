@@ -55,10 +55,10 @@
 1515202025 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\engine.h
 	<SDL.h>
 
-1515275945 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c
+1516002181 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c
 	"player.h"
 
-1515274897 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.h
+1516002035 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.h
 	"SDL.h"
 	"utilities.h"
 	"stdbool.h"
@@ -75,21 +75,21 @@
 
 1515270071 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\settings.c
 
-1515276003 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
+1516010917 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
+	"SDL.h"
+	"SDL_image.h"
 	"utilities.h"
 	"animation.h"
 	"player.h"
 	"object.h"
-	"SDL.h"
-	"SDL_image.h"
 
-1515271253 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.c
+1515969631 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.c
 	"object.h"
 
-1515271074 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.h
+1516001997 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.h
 	"SDL.h"
 	"utilities.h"
 
