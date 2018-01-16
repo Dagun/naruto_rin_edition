@@ -144,7 +144,6 @@ SDL_Rect* object_getObjectPosition(PObject object) {
     return &(object->objectPosition);
 }
 
-
 void object_setMoveSpeed(PObject object, float value) {
     object->moveSpeed = value;
 }

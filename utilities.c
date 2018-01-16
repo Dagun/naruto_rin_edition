@@ -27,3 +27,10 @@ SDL_Texture *LoadTexture(char* filePath, SDL_Renderer* renderTarget) {
     SDL_FreeSurface(surface);
     return texture;
 }
+
+void swapValues(int *a, int *b) {
+    int *tmp = *a;
+    *a = *b;
+    *b = tmp;
+    tmp = NULL;
+}

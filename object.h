@@ -20,6 +20,8 @@ int object_getObjectRectPX(PObject object);
 int object_getObjectRectPY(PObject object);
 int object_getObjectRectX(PObject object);
 int object_getObjectRectY(PObject object);
+int object_getObjectPositionY(PObject object);
+int object_getObjectPositionX(PObject object);
 
 void object_setFrameTime(PObject object, float value);
 void object_setLeft(PObject object, bool value);

@@ -1,5 +1,7 @@
 #include "player.h"
 
+extern const float rin_jumpDelay;
+
 struct player {
     float frameTime;
     bool left;
@@ -12,7 +14,28 @@ struct player {
     SDL_Rect playerPosition;
     bool playerDead;
     int health;
+    float jumpTime;
+    bool isDoneJump;
+    bool canJump;
+    bool onGround;
+    bool canHit;
+    bool isDoneHitting;
+    bool isHitting;
 };
+
+bool player_getCanHit(PPlayer player) {
+    return player->canHit;
+}
+void player_setCanHit(PPlayer player, bool value) {
+    player->canHit = value;
+}
+
+bool player_getIsHitting(PPlayer player) {
+    return player->isHitting;
+}
+void player_setIsHitting(PPlayer player, bool value) {
+    player->isHitting = value;
+}
 
 PPlayer player_create() {
     PPlayer ply = (PPlayer) malloc(sizeof(struct player));
@@ -27,12 +50,93 @@ PPlayer player_create() {
     player_setPlayerPositionW(ply,0);
     player_setPlayerPositionH(ply,0);
 
+    player_setIsDoneHitting(ply,true);
+    player_setIsHitting(ply,false);
+    player_setCanHit(ply,true);
+
+    player_setOnGround(ply,true);
+    player_setJumpTime(ply,0);
+    player_setCanJump(ply,false);
+    player_setIsDoneJump(ply,true);
+
     player_setPlayerRectX(ply,0);
     player_setPlayerRectY(ply,0);
     player_setPlayerRectW(ply,0);
     player_setPlayerRectH(ply,0);
 
     return ply;
+}
+
+void player_setIsDoneHitting(PPlayer player, bool value) {
+    player->isDoneHitting = value;
+}
+
+bool player_getIsDoneHitting(PPlayer player) {
+    return player->isDoneHitting;
+}
+
+void player_setOnGround(PPlayer player, bool value) {
+    player->onGround = value;
+}
+
+bool player_getOnGround(PPlayer player) {
+    return player->onGround;
+}
+
+void player_setIsDoneJump(PPlayer player, bool value) {
+    player->isDoneJump = value;
+}
+
+bool player_getIsDoneJump(PPlayer player) {
+    return player->isDoneJump;
+}
+
+void player_setCanJump(PPlayer player, bool value) {
+    player->canJump = value;
+}
+
+bool player_getCanJump(PPlayer player) {
+    return player->canJump;
+}
+
+int player_hit(PPlayer player, int frameBegin, int frameEnd) {
+    if(player_getIsDoneHitting(player)==false && player_getIsHitting(player)==true && player_getCurDoing(player)==3) {
+        if(player_getCurDoing(player)==3) {
+            if(player_getPlayerRectY(player) <= frameEnd &&  player_getPlayerRectY(player) >= frameBegin) {
+                if(player_getPlayerRectY(player) == frameEnd) {
+                    player_setIsDoneHitting(player,true);
+                    player_setIsHitting(player,false);
+                }
+            }
+        }
+    } else {
+        player_setIsDoneHitting(player,true);
+        player_setIsHitting(player,false);
+    }
+}
+
+void player_jump(PPlayer player, float deltaTime) {
+    if(player_getCanJump(player)==true && player_getOnGround(player) == true || player_getIsDoneJump(player)== false){
+        player_setJumpTime(player,player_getJumpTime(player) - deltaTime);
+        if(player_getJumpTime(player) < rin_jumpDelay && player_getJumpTime(player)  > 0.01) {
+            int tmp = player_getPlayerPositionY(player)-15;
+            player_setIsDoneJump(player,false);
+            player_setPlayerPositionY(player,tmp);
+            player_setCurDoing(player,6);
+        } else {
+            player_setJumpTime(player,rin_jumpDelay);
+            player_setCanJump(player,false);
+            player_setIsDoneJump(player,true);
+        }
+    }
+}
+
+void player_setJumpTime(PPlayer player, float value) {
+    player->jumpTime = value;
+}
+
+float player_getJumpTime(PPlayer player) {
+    return player->jumpTime;
 }
 
 void player_setDead(PPlayer player, bool value) {
@@ -51,7 +155,7 @@ int player_getHealth(PPlayer player) {
     return player->health;
 }
 
-PPlayer player_getPFrameTime(PPlayer player) {
+float* player_getPFrameTime(PPlayer player) {
     return &(player->frameTime);
 }
 
@@ -88,11 +192,11 @@ void player_setPlayerRectH(PPlayer player, int value) {
     player->playerRect.h = value;
 }
 
-int player_getPlayerRectPX(PPlayer player) {
+int* player_getPlayerRectPX(PPlayer player) {
     return &(player->playerRect.x);
 }
 
-int player_getPlayerRectPY(PPlayer player) {
+int* player_getPlayerRectPY(PPlayer player) {
     return &(player->playerRect.y);
 }
 
@@ -201,3 +305,4 @@ void player_playerRemove(PPlayer player) {
     free(player);
     player = NULL;
 }
+

@@ -39,6 +39,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="engine.h" />
+		<Unit filename="homescreen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="homescreen.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
