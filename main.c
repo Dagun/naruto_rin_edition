@@ -34,6 +34,16 @@ extern const int exitWidth;
 extern const int settingsHeight;
 extern const int settingsWidth;
 
+extern const int unknownHeight;
+extern const int unknownWidth;
+
+extern const int background_frameWidth;
+extern const int background_frameHeight;
+extern const int background_textureWidth;
+extern const int background_textureHeight;
+extern const int background_characterWidth;
+extern const int background_characterHeight;
+
 //RIN CHARACTER
 extern const int rin_frameWidth;
 extern const int rin_frameHeight;
@@ -42,6 +52,14 @@ extern const int rin_textureHeight;
 extern const int rin_characterWidth;
 extern const int rin_characterHeight;
 extern const float rin_jumpDelay;
+
+//SEXY JUTSU
+extern const int sexyjutsu_frameWidth;
+extern const int sexyjutsu_frameHeight;
+extern const int sexyjutsu_textureWidth;
+extern const int sexyjutsu_textureHeight;
+extern const int sexyjutsu_characterWidth;
+extern const int sexyjutsu_characterHeight;
 
 //RIVER BACKGROUND1
 extern const int river_frameWidth;
@@ -95,21 +113,90 @@ int main(int argc, char* argv[]) {
     float deltaTime = 0;
 
     float homeScreenTime=0;
+    bool runSettings = false;
 
     bool homeScreenRunning = true;
     bool choosePlayerRunning = true;
     bool running = true;
 
-    SDL_Window *homeScreenWindow= SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, widthHomeScreen, heightHomeScreen,SDL_WINDOW_BORDERLESS);
+    SDL_Window *homeScreenWindow= SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, widthHomeScreen, heightHomeScreen,SDL_WINDOW_SHOWN);
     SDL_Renderer *homeScreenRenderer = SDL_CreateRenderer(homeScreenWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_Event homeScreenEvent;
 
-    SDL_Texture *homeScreenBackground = LoadTexture("images/homeScreen/background.png",homeScreenRenderer);
+    /*SDL_Texture *homeScreenBackground = LoadTexture("images/homeScreen/background.png",homeScreenRenderer);
     if(homeScreenBackground == NULL ) {
-        printf("Unable to load Texture\n");
+        printf("Unable to load Texture\n");background
         initializedSucces = false;
         homeScreenRunning = false;
-    }
+    }*/
+
+    PObject sexyjutsu = object_create();
+    object_setFrameTime(sexyjutsu,0);
+    object_setTextureWidth(sexyjutsu,sexyjutsu_textureWidth);
+    object_setTextureHeight(sexyjutsu,sexyjutsu_textureHeight);
+    object_setObjectRectW(sexyjutsu,sexyjutsu_frameWidth);
+    object_setObjectRectH(sexyjutsu,sexyjutsu_frameHeight);
+    object_setObjectPositionW(sexyjutsu,sexyjutsu_characterWidth);
+    object_setObjectPositionH(sexyjutsu,sexyjutsu_characterHeight);
+    object_setObjectPositionX(sexyjutsu,40);
+    object_setObjectPositionY(sexyjutsu,500);
+    object_setTexturePath(sexyjutsu,homeScreenRenderer,"images/sexyjutsu/sexyjutsu.png");
+
+    PObject background2 = object_create();
+    object_setFrameTime(background2,0);
+    object_setTextureWidth(background2,background_textureWidth);
+    object_setTextureHeight(background2,background_textureHeight);
+    object_setObjectRectW(background2,background_frameWidth);
+    object_setObjectRectH(background2,background_frameHeight);
+    object_setObjectPositionW(background2,background_characterWidth);
+    object_setObjectPositionH(background2,background_characterHeight);
+    object_setObjectPositionX(background2,0);
+    object_setObjectPositionY(background2,0);
+    object_setTexturePath(background2,homeScreenRenderer,"images/homeScreen/background.png");
+
+    PObject unknown = object_create();
+    object_setTextureWidth(unknown,unknownWidth);
+    object_setTextureHeight(unknown,unknownHeight);
+    object_setObjectRectW(unknown,unknownWidth);
+    object_setObjectRectH(unknown,unknownHeight);
+    object_setObjectPositionW(unknown,unknownWidth);
+    object_setObjectPositionH(unknown,unknownHeight);
+    object_setObjectPositionX(unknown,200);
+    object_setObjectPositionY(unknown,430);
+    object_setTexturePath(unknown,homeScreenRenderer,"images/homeScreen/unknown.png");
+
+    PObject unknown2 = object_create();
+    object_setTextureWidth(unknown2,unknownWidth);
+    object_setTextureHeight(unknown2,unknownHeight);
+    object_setObjectRectW(unknown2,unknownWidth);
+    object_setObjectRectH(unknown2,unknownHeight);
+    object_setObjectPositionW(unknown2,unknownWidth);
+    object_setObjectPositionH(unknown2,unknownHeight);
+    object_setObjectPositionX(unknown2,200);
+    object_setObjectPositionY(unknown2,430);
+    object_setTexturePath(unknown2,homeScreenRenderer,"images/homeScreen/unknown2.png");
+
+    PObject unknown3 = object_create();
+    object_setTextureWidth(unknown3,unknownWidth);
+    object_setTextureHeight(unknown3,unknownHeight);
+    object_setObjectRectW(unknown3,unknownWidth);
+    object_setObjectRectH(unknown3,unknownHeight);
+    object_setObjectPositionW(unknown3,unknownWidth);
+    object_setObjectPositionH(unknown3,unknownHeight);
+    object_setObjectPositionX(unknown3,200);
+    object_setObjectPositionY(unknown3,530);
+    object_setTexturePath(unknown3,homeScreenRenderer,"images/homeScreen/unknown.png");
+
+    PObject unknown4 = object_create();
+    object_setTextureWidth(unknown4,unknownWidth);
+    object_setTextureHeight(unknown4,unknownHeight);
+    object_setObjectRectW(unknown4,unknownWidth);
+    object_setObjectRectH(unknown4,unknownHeight);
+    object_setObjectPositionW(unknown4,unknownWidth);
+    object_setObjectPositionH(unknown4,unknownHeight);
+    object_setObjectPositionX(unknown4,200);
+    object_setObjectPositionY(unknown4,530);
+    object_setTexturePath(unknown4,homeScreenRenderer,"images/homeScreen/unknown2.png");
 
     PObject logo = object_create();
     object_setTextureWidth(logo,logoWidth);
@@ -203,6 +290,8 @@ int main(int argc, char* argv[]) {
 
     int currentChoose = 1;
 
+    int homeScreenAnimationShow = 1;
+
     bool currentChanged = false;
     bool direction = true;
 
@@ -213,7 +302,8 @@ int main(int argc, char* argv[]) {
         prevTime = currentTime;
         currentTime = SDL_GetTicks();
         deltaTime = (currentTime - prevTime) / 1000.0f;
-
+        player_setFrameTime(background2, player_getFrameTime(background2)+deltaTime);
+        player_setFrameTime(sexyjutsu, player_getFrameTime(sexyjutsu)+deltaTime);
         homeScreenTime += deltaTime;
 
         if(homeScreenTime>=1 && homeScreenTime <= 2) {
@@ -223,13 +313,17 @@ int main(int argc, char* argv[]) {
             homeScreenTime = 0;
         }
 
+        object_setObjectPositionY(logo,230);
+        object_setObjectPositionX(sexyjutsu,40);
+        object_setLeft(sexyjutsu,false);
+
         while(SDL_PollEvent(&homeScreenEvent)) {
             if(homeScreenEvent.type == SDL_QUIT) {
                 running = false;
                 homeScreenRunning = false;
                 choosePlayerRunning = false;
             }
-            if(homeScreenEvent.type == SDL_KEYDOWN) {
+            if(homeScreenEvent.type == SDL_KEYUP) {
                 if(homeScreenEvent.key.keysym.sym == SDLK_DOWN) {
                     currentChoose++;
                     currentChanged = true;
@@ -244,10 +338,127 @@ int main(int argc, char* argv[]) {
                         if(currentChoose < 1) {
                             currentChoose = 3;
                         }
-                } else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN) {
+                }else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN) {
                         switch(currentChoose) {
                         case 1: homeScreenRunning = false; break;
-                        case 2: break;
+                        case 2: homeScreenAnimationShow = 0; runSettings = true;
+                        direction = true;
+                        swapValues(&settings,&settings2);
+                        swapValues(&exit,&exit2);
+                        object_setObjectPositionY(settings,200);
+                        object_setObjectPositionX(sexyjutsu,550);
+                        object_setObjectPositionY(logo,40);
+                        object_setLeft(sexyjutsu,true);
+                        currentChanged = false;
+                        currentChoose = 3;
+                        while(runSettings==true) {
+                                homeScreenTime += deltaTime;
+                                prevTime = currentTime;
+                                currentTime = SDL_GetTicks();
+                                deltaTime = (currentTime - prevTime) / 1000.0f;
+                                 player_setFrameTime(background2, player_getFrameTime(background2)+deltaTime);
+                                 player_setFrameTime(sexyjutsu, player_getFrameTime(sexyjutsu)+deltaTime);
+                               while(SDL_PollEvent(&homeScreenEvent)) {
+                                    if(homeScreenEvent.type == SDL_QUIT) {
+                                        running = false;
+                                        homeScreenRunning = false;
+                                        choosePlayerRunning = false;
+                                        runSettings=false;
+                                    }
+                                if(homeScreenEvent.type == SDL_KEYDOWN) {
+                                } else if(homeScreenEvent.key.keysym.sym == SDLK_DOWN) {
+                                        currentChoose++;
+                                        currentChanged = true;
+                                        direction = true;
+                                        if(currentChoose > 3) {
+                                            currentChoose = 1;
+                                        }
+                                } else if(homeScreenEvent.key.keysym.sym == SDLK_UP) {
+                                        currentChoose--;
+                                        currentChanged = true;
+                                        direction = false;
+                                        if(currentChoose < 1) {
+                                            currentChoose = 3;
+                                        }
+                                }else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN) {
+                                    switch(currentChoose) {
+                                case 1: break;
+                                case 2: break;
+                                case 3:
+
+
+                                    swapValues(&exit,&exit2);
+                                    object_setObjectPositionY(settings,530);
+                                    swapValues(&settings,&settings2);
+                                    currentChanged = false;
+                                    currentChoose = 2;
+                                    runSettings=false;
+                                    homeScreenAnimationShow = true;
+                                    break;
+                                    }
+                                }
+                            }
+
+                            if(currentChanged == true) {
+                                switch(currentChoose){
+                                case 2:
+
+                                            if(direction) {
+                                                swapValues(&unknown,&unknown2);
+                                                swapValues(&unknown3,&unknown4);
+                                            } else if(!direction){
+                                                swapValues(&unknown3,&unknown4);
+                                                swapValues(&exit,&exit2);
+                                            }
+                                    break;
+                                case 3:
+
+                                            if(direction){
+                                                swapValues(&unknown3,&unknown4);
+                                                swapValues(&exit,&exit2);
+                                            } else if(!direction){
+                                                swapValues(&exit,&exit2);
+                                                swapValues(&unknown,&unknown2);
+                                            }
+                                    break;
+                                case 1:
+                                            if(direction){
+                                                swapValues(&exit,&exit2);
+                                                swapValues(&unknown,&unknown2);
+                                            }else if(!direction){
+                                                swapValues(&unknown,&unknown2);
+                                                swapValues(&unknown3,&unknown4);
+                                            }
+                                    break;
+                                }
+                                currentChanged = false;
+                            }
+
+                            if(homeScreenTime>=1 && homeScreenTime <= 2) {
+                                object_setLeft(logo,true);
+                            } else if(homeScreenTime >= 2){
+                                object_setLeft(logo,false);
+                                homeScreenTime = 0;
+                            }
+
+                            //SDL_RenderCopy(homeScreenRenderer,homeScreenBackground,NULL,NULL);
+                            animation_create(object_getPFrameTime(background2),object_getObjectRectPY(background2),object_getObjectRectPX(background2),4,-260,780,0.8f,background_frameHeight);
+                            animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),object_getObjectRectPX(sexyjutsu),43,-130,5460,0.25f,sexyjutsu_frameHeight);
+                            animation_create(object_getPFrameTime(logo),object_getObjectRectPY(logo),object_getObjectRectPX(logo),0,-logoHeight,0,0.5f,logoHeight);
+                            animation_create(object_getPFrameTime(settings),object_getObjectRectPY(settings),object_getObjectRectPX(settings),0,-settingsHeight,0,0.5f,settingsHeight);
+                            animation_create(object_getPFrameTime(exit),object_getObjectRectPY(exit),object_getObjectRectPX(exit),0,-exitHeight,0,0.5f,exitHeight);
+                            animation_create(object_getPFrameTime(unknown),object_getObjectRectPY(unknown),object_getObjectRectPX(unknown),0,-unknownHeight,0,0.5f,unknownHeight);
+                            animation_create(object_getPFrameTime(unknown3),object_getObjectRectPY(unknown3),object_getObjectRectPX(unknown3),0,-unknownHeight,0,0.5f,unknownHeight);
+                            animation_show(homeScreenRenderer,NULL,background2,object_getLeft(background2));
+                            animation_show(homeScreenRenderer,NULL,sexyjutsu,object_getLeft(sexyjutsu));
+                            animation_show(homeScreenRenderer,NULL,settings,object_getLeft(settings));
+                            animation_show(homeScreenRenderer,NULL,exit,object_getLeft(exit));
+                            animation_show(homeScreenRenderer,NULL,unknown,object_getLeft(unknown));
+                            animation_show(homeScreenRenderer,NULL,unknown3,object_getLeft(unknown3));
+                            animation_show(homeScreenRenderer,NULL,logo,object_getLeft(logo));
+                            SDL_RenderPresent(homeScreenRenderer);
+                        }
+                        break;
                         case 3: running = false; choosePlayerRunning = false; homeScreenRunning = false; break;
                         }
                 }
@@ -289,8 +500,8 @@ int main(int argc, char* argv[]) {
             currentChanged = false;
         }
 
-        SDL_RenderCopy(homeScreenRenderer,homeScreenBackground,NULL,NULL);
-
+        animation_create(object_getPFrameTime(background2),object_getObjectRectPY(background2),object_getObjectRectPX(background2),4,-260,780,0.8f,background_frameHeight);
+        animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),object_getObjectRectPX(sexyjutsu),43,-130,5460,0.25f,sexyjutsu_frameHeight);
         animation_create(object_getPFrameTime(logo),object_getObjectRectPY(logo),object_getObjectRectPX(logo),0,-logoHeight,0,0.5f,logoHeight);
 
         animation_create(object_getPFrameTime(text),object_getObjectRectPY(text),object_getObjectRectPX(text),0,-textHeight,0,0.5f,textHeight);
@@ -298,28 +509,45 @@ int main(int argc, char* argv[]) {
         animation_create(object_getPFrameTime(exit),object_getObjectRectPY(exit),object_getObjectRectPX(exit),0,-exitHeight,0,0.5f,exitHeight);
         animation_create(object_getPFrameTime(settings),object_getObjectRectPY(settings),object_getObjectRectPX(settings),0,-settingsHeight,0,0.5f,settingsHeight);
 
-        animation_show(homeScreenRenderer,NULL,logo,object_getLeft(logo));
-        animation_show(homeScreenRenderer,NULL,text,object_getLeft(text));
-        animation_show(homeScreenRenderer,NULL,settings,object_getLeft(settings));
-        animation_show(homeScreenRenderer,NULL,start,object_getLeft(start));
-        animation_show(homeScreenRenderer,NULL,exit,object_getLeft(exit));
-
+        if(homeScreenAnimationShow == 1) {
+            animation_show(homeScreenRenderer,NULL,background2,object_getLeft(background2));
+            animation_show(homeScreenRenderer,NULL,sexyjutsu,object_getLeft(sexyjutsu));
+            animation_show(homeScreenRenderer,NULL,logo,object_getLeft(logo));
+            animation_show(homeScreenRenderer,NULL,text,object_getLeft(text));
+            animation_show(homeScreenRenderer,NULL,settings,object_getLeft(settings));
+            animation_show(homeScreenRenderer,NULL,start,object_getLeft(start));
+            animation_show(homeScreenRenderer,NULL,exit,object_getLeft(exit));
+        }
         SDL_RenderPresent(homeScreenRenderer);
 
     }
 
     SDL_DestroyRenderer(homeScreenRenderer);
-    SDL_DestroyTexture(homeScreenBackground);
+    //SDL_DestroyTexture(homeScreenBackground);
     SDL_DestroyWindow(homeScreenWindow);
 
-    homeScreenBackground = NULL;
+    //homeScreenBackground = NULL;
     homeScreenWindow = NULL;
     homeScreenRenderer = NULL;
 
     object_objectRemove(start);
     object_objectRemove(start2);
+    object_objectRemove(unknown2);
+    object_objectRemove(unknown);
+    object_objectRemove(unknown3);
+    object_objectRemove(unknown4);
+    unknown = NULL;
+    unknown2 = NULL;
+    unknown3 = NULL;
+    unknown4 = NULL;
     start = NULL;
     start2 = NULL;
+
+    object_objectRemove(sexyjutsu);
+    object_objectRemove(background2);
+    background2 = NULL;
+    sexyjutsu = NULL;
+
 
     object_objectRemove(exit);
     object_objectRemove(exit2);
@@ -339,7 +567,7 @@ int main(int argc, char* argv[]) {
     float gravityTimer = 0;
 
 
-    SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_RESIZABLE);
+    SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_FULLSCREEN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_Event event;
 

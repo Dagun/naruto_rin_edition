@@ -66,7 +66,7 @@
 	"utilities.h"
 	"stdbool.h"
 
-1516127304 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.h
+1516142484 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.h
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -74,12 +74,12 @@
 	"object.h"
 	"SDL.h"
 
-1516127304 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.c
+1516131349 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.c
 	"utilities.h"
 
-1516123300 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\settings.c
+1516140719 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\settings.c
 
-1516129828 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
+1516142388 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -103,4 +103,6 @@
 	"homescreen.h"
 
 1516119324 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\homescreen.h
+
+1516141766 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\resources.rc
 

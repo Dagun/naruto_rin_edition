@@ -34,3 +34,7 @@ void swapValues(int *a, int *b) {
     *b = tmp;
     tmp = NULL;
 }
+
+void open_Settings(){
+    printf("GOT IT!");
+}
