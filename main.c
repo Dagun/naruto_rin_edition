@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_mixer.h"
 #include "utilities.h"
 #include "animation.h"
 #include "player.h"
@@ -85,7 +86,7 @@ int main(int argc, char* argv[])
     bool retry = true;
     bool clicked = false;
 
-    if(SDL_Init(SDL_INIT_VIDEO)!=0)
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)!=0)
     {
 
         printf("Unable to initialize SDL: %s\n",SDL_GetError());
@@ -117,6 +118,22 @@ int main(int argc, char* argv[])
             printf("Cannot connect with controller: SDL ERROR: %s",SDL_GetError());
         }
     }
+
+    //Mix_Init(MIX_INIT_MP3);
+
+    int audio_rate = 44100;
+    Uint16 audio_format = MIX_DEFAULT_FORMAT;
+    int audio_channels = 2;
+    int audio_buffers = 2048;
+
+    if(Mix_OpenAudio(audio_rate, AUDIO_S16SYS,audio_channels,audio_buffers) < 0) {
+        initializedSucces = false;
+        printf("SDL_mixer coudlnt initzialise: %s\n",Mix_GetError());
+    }
+    Mix_Music *backgroundSound = Mix_LoadMUS("music/mn.wav");
+    Mix_Chunk *combo1 = Mix_LoadWAV("music/combo1.wav");
+
+    Mix_PlayMusic(backgroundSound,-1);
 
     while(retry)
     {
@@ -886,6 +903,97 @@ int main(int argc, char* argv[])
     object_setObjectPositionY(cloud,30);
     object_setTexturePath(cloud,renderer,"images/background1/cloud.png");
 
+    PObject p1win = object_create();
+    object_setTextureWidth(p1win,161);
+    object_setTextureHeight(p1win,81);
+    object_setObjectRectW(p1win,161);
+    object_setObjectRectH(p1win,81);
+    object_setObjectPositionW(p1win,161);
+    object_setObjectPositionH(p1win,81);
+    object_setObjectPositionX(p1win,870);
+    object_setObjectPositionY(p1win,700);
+    object_setTexturePath(p1win,renderer,"images/win/p1win.png");
+
+    PObject p1win2= object_create();
+    object_setTextureWidth(p1win2,161);
+    object_setTextureHeight(p1win2,81);
+    object_setObjectRectW(p1win2,161);
+    object_setObjectRectH(p1win2,81);
+    object_setObjectPositionW(p1win2,161);
+    object_setObjectPositionH(p1win2,81);
+    object_setObjectPositionX(p1win2,870);
+    object_setObjectPositionY(p1win2,700);
+    object_setTexturePath(p1win2,renderer,"images/win/p1win2.png");
+
+    PObject p2win = object_create();
+    object_setTextureWidth(p2win,161);
+    object_setTextureHeight(p2win,81);
+    object_setObjectRectW(p2win,161);
+    object_setObjectRectH(p2win,81);
+    object_setObjectPositionW(p2win,161);
+    object_setObjectPositionH(p2win,81);
+    object_setObjectPositionX(p2win,870);
+    object_setObjectPositionY(p2win,700);
+    object_setTexturePath(p2win,renderer,"images/win/p2win.png");
+
+
+    PObject p2win2 = object_create();
+    object_setTextureWidth(p2win2,161);
+    object_setTextureHeight(p2win2,81);
+    object_setObjectRectW(p2win2,161);
+    object_setObjectRectH(p2win2,81);
+    object_setObjectPositionW(p2win2,161);
+    object_setObjectPositionH(p2win2,81);
+    object_setObjectPositionX(p2win2,870);
+    object_setObjectPositionY(p2win2,700);
+    object_setTexturePath(p2win2,renderer,"images/win/p2win2.png");
+
+    PObject healthbar1 = object_create();
+    object_setTextureWidth(healthbar1,600);
+    object_setTextureHeight(healthbar1,400);
+    object_setObjectRectW(healthbar1,600);
+    object_setObjectRectH(healthbar1,400);
+    object_setObjectPositionW(healthbar1,350);
+    object_setObjectPositionH(healthbar1,150);
+    object_setObjectPositionX(healthbar1,50);
+    object_setObjectPositionY(healthbar1,900);
+    object_setTexturePath(healthbar1,renderer,"images/healthbar.png");
+
+    PObject health1 = object_create();
+    object_setTextureWidth(health1,600);
+    object_setTextureHeight(health1,400);
+    object_setObjectRectW(health1,600);
+    object_setObjectRectH(health1,400);
+    object_setObjectPositionW(health1,250);
+    object_setObjectPositionH(health1,50);
+    object_setObjectPositionX(health1,120);
+    object_setObjectPositionY(health1,945);
+    object_setTexturePath(health1,renderer,"images/health.png");
+
+    PObject healthbar2 = object_create();
+    object_setTextureWidth(healthbar2,600);
+    object_setTextureHeight(healthbar2,400);
+    object_setObjectRectW(healthbar2,600);
+    object_setObjectRectH(healthbar2,400);
+    object_setObjectPositionW(healthbar2,350);
+    object_setObjectPositionH(healthbar2,150);
+    object_setObjectPositionX(healthbar2,1500);
+    object_setLeft(healthbar2,true);
+    object_setObjectPositionY(healthbar2,900);
+    object_setTexturePath(healthbar2,renderer,"images/healthbar.png");
+
+    PObject health2 = object_create();
+    object_setTextureWidth(health2,600);
+    object_setTextureHeight(health2,400);
+    object_setObjectRectW(health2,600);
+    object_setObjectRectH(health2,400);
+    object_setObjectPositionW(health2,250);
+    object_setObjectPositionH(health2,50);
+    object_setObjectPositionX(health2,1780);
+    object_setLeft(health2,true);
+    object_setObjectPositionY(health2,945);
+    object_setTexturePath(health2,renderer,"images/health.png");
+
     bool pause = false;
 
     swapValues(&continuetext2,&continuetext);
@@ -1057,6 +1165,7 @@ int main(int argc, char* argv[])
             {
                 if(player_getDead(player2)==false)
                 {
+                    Mix_PlayChannel(-1,combo1,0);
                     player_setCurDoing(player2,3);
                     player_setIsHitting(player2,true);
                     player_setIsDoneHitting(player2,false);
@@ -1121,6 +1230,7 @@ int main(int argc, char* argv[])
             {
                 if(player_getDead(player1)==false)
                 {
+                    Mix_PlayChannel(-1,combo1,0);
                     player_setCurDoing(player1,3);
                     player_setIsHitting(player1,true);
                     player_setIsDoneHitting(player1,false);
@@ -1180,6 +1290,8 @@ int main(int argc, char* argv[])
                     player_setFrameTime(player1,0);
                 }
                 player_setCurDoing(player1,4);
+
+                //swapValues()
             }
             else
             {
@@ -1292,6 +1404,9 @@ int main(int argc, char* argv[])
             player_setFrameTime(player1, player_getFrameTime(player1)+deltaTime);
             player_setFrameTime(player2, player_getFrameTime(player2)+deltaTime);
 
+            object_setObjectPositionW(health1,2.5*player_getHealth(player1));
+            object_setObjectPositionW(health2,-2.5*player_getHealth(player2));
+
         }
         if(player_getDead(player1))
         {
@@ -1362,12 +1477,18 @@ int main(int argc, char* argv[])
         }
 
 
+
+
         animation_create(object_getPFrameTime(river),object_getObjectRectPY(river),object_getObjectRectPX(river),3,-111,222,0.5f,river_frameHeight);
         animation_create(object_getPFrameTime(ground1),object_getObjectRectPY(ground1),object_getObjectRectPX(ground1),0,-46,0,0.5f,46);
         animation_create(object_getPFrameTime(transparency),object_getObjectRectPY(transparency),object_getObjectRectPX(transparency),0,-100,0,0.15,100);
         animation_create(object_getPFrameTime(exit_2),object_getObjectRectPY(exit_2),object_getObjectRectPX(exit_2),0,-81,0,0.5f,81);
         animation_create(object_getPFrameTime(btm),object_getObjectRectPY(btm),object_getObjectRectPX(btm),0,-80,0,0.5f,80);
         animation_create(object_getPFrameTime(continuetext),object_getObjectRectPY(continuetext),object_getObjectRectPX(continuetext2),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(healthbar1),object_getObjectRectPY(healthbar1),object_getObjectRectPX(healthbar1),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(health1),object_getObjectRectPY(health1),object_getObjectRectPX(health1),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(healthbar2),object_getObjectRectPY(healthbar2),object_getObjectRectPX(healthbar2),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(health2),object_getObjectRectPY(health2),object_getObjectRectPX(health2),0,-79,0,0.5f,79);
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer,background,NULL,NULL);
@@ -1376,6 +1497,10 @@ int main(int argc, char* argv[])
         animation_show(renderer,NULL,cloud,object_getLeft(cloud));
         animation_show(renderer,player1,NULL,player_getLeft(player1));
         animation_show(renderer,player2,NULL,player_getLeft(player2));
+        animation_show(renderer,health1,NULL,player_getLeft(health1));
+        animation_show(renderer,healthbar1,NULL,player_getLeft(healthbar1));
+        animation_show(renderer,health2,NULL,player_getLeft(health2));
+        animation_show(renderer,healthbar2,NULL,player_getLeft(healthbar2));
 
         if(pause==true)
         {
@@ -1409,7 +1534,15 @@ int main(int argc, char* argv[])
     object_objectRemove(continuetext2);
     object_objectRemove(continuetext);
     object_objectRemove(transparency);
+    object_objectRemove(p1win);
+    object_objectRemove(p1win2);
+    object_objectRemove(p2win);
+    object_objectRemove(p2win2);
 
+    p1win = NULL;
+    p2win = NULL;
+    p1win2 = NULL;
+    p2win2 = NULL;
     btm = NULL;
     btm2 = NULL;
     exit_2 = NULL;
@@ -1430,6 +1563,12 @@ int main(int argc, char* argv[])
     renderer = NULL;
     window = NULL;
 }
+
+Mix_FreeMusic(backgroundSound);
+Mix_FreeChunk(combo1);
+combo1 = NULL;
+backgroundSound =NULL;
+Mix_CloseAudio();
 
 SDL_Quit();
 return 0;

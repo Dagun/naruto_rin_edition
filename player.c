@@ -130,8 +130,12 @@ int player_hit(PPlayer player,PPlayer player2, int frameBegin, int frameEnd) {
         player_setIsHitting(player,false);
     }
     if(player_getDealDamage(player)==true && player_getPlayerRectY(player) >= -100 && player_getPlayerRectY(player) <= 200) {
-            player_setHealth(player2,player_getHealth(player2)-rin_strength);
-            player_setDealDamage(player,false);
+            if(player_getCanHit(player)) {
+                    if(player_getHealth(player2)>0) {
+                        player_setHealth(player2,player_getHealth(player2)-rin_strength);
+                        player_setDealDamage(player,false);
+                    }
+            }
     }
 }
 

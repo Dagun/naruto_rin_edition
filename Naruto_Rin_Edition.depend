@@ -58,7 +58,7 @@
 	"player.h"
 	"object.h"
 
-1516197902 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c
+1516222900 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c
 	"player.h"
 
 1516195540 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.h
@@ -79,12 +79,13 @@
 
 1516206995 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\settings.c
 
-1516216811 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
+1516222808 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	"SDL.h"
 	"SDL_image.h"
+	"SDL_mixer.h"
 	"utilities.h"
 	"animation.h"
 	"player.h"
