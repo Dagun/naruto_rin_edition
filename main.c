@@ -752,7 +752,7 @@ int main(int argc, char* argv[])
 
     float gravityTimer = 0;
 
-    SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_FULLSCREEN);
+    SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_RESIZABLE);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_Event event;
 
@@ -1032,14 +1032,17 @@ int main(int argc, char* argv[])
                 {
 
                 }
-                else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_X)
-                {
-
+                else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_X) {
+                    Mix_PlayChannel(-1,combo1,0);
+                    player_setCurDoing(player1,3);
+                    player_setIsHitting(player1,true);
+                    player_setIsDoneHitting(player1,false);
                 }
             }
             else if(event.type == SDL_CONTROLLERAXISMOTION)
             {
-                //if(event.caxis.value )
+               printf("%d\n",SDL_GameControllerGetAxis(controller1,SDL_CONTROLLER_AXIS_TRIGGERLEFT));
+                //printf("%d\n",SDL_GameControllerGetAxis(controller1,SDL_CONTROLLER_AXIS_LEFTX ));
             }
             else if(event.type == SDL_MOUSEBUTTONDOWN && pause)
             {
@@ -1111,7 +1114,24 @@ int main(int argc, char* argv[])
                         break;
                     }
                     break;
+                    case SDLK_f:
+                        if(player_getDead(player1)==false)
+                            {
+                                Mix_PlayChannel(-1,combo1,0);
+                                player_setCurDoing(player1,3);
+                                player_setIsHitting(player1,true);
+                                player_setIsDoneHitting(player1,false);
+                            } break;
+                    case SDLK_KP_4:
+                        if(player_getDead(player2)==false)
+                            {
+                                Mix_PlayChannel(-1,combo1,0);
+                                player_setCurDoing(player2,3);
+                                player_setIsHitting(player2,true);
+                                player_setIsDoneHitting(player2,false);
+                            } break;
                 }
+
             }
             else if(event.type == SDL_MOUSEMOTION)
             {
@@ -1161,17 +1181,7 @@ int main(int argc, char* argv[])
                     player_setCurDoing(player2,6);
                 }
             }
-            if(state[SDL_SCANCODE_KP_4])
-            {
-                if(player_getDead(player2)==false)
-                {
-                    Mix_PlayChannel(-1,combo1,0);
-                    player_setCurDoing(player2,3);
-                    player_setIsHitting(player2,true);
-                    player_setIsDoneHitting(player2,false);
-                }
-            }
-            else if(state[SDL_SCANCODE_RIGHT])
+           if(state[SDL_SCANCODE_RIGHT])
             {
                 if(player_getDead(player2)==false)
                 {
@@ -1226,21 +1236,11 @@ int main(int argc, char* argv[])
                     player_setCurDoing(player1,6);
                 }
             }
-            if(state[SDL_SCANCODE_F])
+            if(state[SDL_SCANCODE_D] || SDL_GameControllerGetAxis(controller1,SDL_CONTROLLER_AXIS_LEFTX)  > 100)
             {
                 if(player_getDead(player1)==false)
                 {
-                    Mix_PlayChannel(-1,combo1,0);
-                    player_setCurDoing(player1,3);
-                    player_setIsHitting(player1,true);
-                    player_setIsDoneHitting(player1,false);
-                }
-            }
-            else if(state[SDL_SCANCODE_D])
-            {
-                if(player_getDead(player1)==false)
-                {
-                    if(state[SDL_SCANCODE_LSHIFT])
+                    if(state[SDL_SCANCODE_LSHIFT] || SDL_GameControllerGetAxis(controller1,SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 1000)
                     {
                         int currentX = (player_getPlayerPositionX(player1) + ((player_getMoveSpeed(player1)+150) * deltaTime));
                         player_setPlayerPositionX(player1,currentX);
@@ -1256,11 +1256,11 @@ int main(int argc, char* argv[])
                     }
                 }
             }
-            else  if(state[SDL_SCANCODE_A])
+            else  if(state[SDL_SCANCODE_A] || SDL_GameControllerGetAxis(controller1,SDL_CONTROLLER_AXIS_LEFTX ) < -100)
             {
                 if(player_getDead(player1)==false)
                 {
-                    if(state[SDL_SCANCODE_LSHIFT])
+                    if(state[SDL_SCANCODE_LSHIFT]|| SDL_GameControllerGetAxis(controller1,SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 1000)
                     {
                         int currentX = (player_getPlayerPositionX(player1) - ((player_getMoveSpeed(player1)+150) * deltaTime));
                         player_setPlayerPositionX(player1,currentX);
