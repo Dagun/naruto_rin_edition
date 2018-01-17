@@ -28,8 +28,8 @@ SDL_Texture *LoadTexture(char* filePath, SDL_Renderer* renderTarget) {
     return texture;
 }
 
-void swapValues(int *a, int *b) {
-    int *tmp = *a;
+void swapValues(void **a, void **b) {
+    void *tmp = *a;
     *a = *b;
     *b = tmp;
     tmp = NULL;

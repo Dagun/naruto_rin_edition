@@ -50,23 +50,23 @@
 	"object.h"
 	"stdbool.h"
 
-1516104587 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\engine.c
+1516198806 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\engine.c
 	"engine.h"
 
-1516103390 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\engine.h
+1516198865 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\engine.h
 	<SDL.h>
 	"player.h"
 	"object.h"
 
-1516118618 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c
+1516197902 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c
 	"player.h"
 
-1516124522 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.h
+1516195540 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.h
 	"SDL.h"
 	"utilities.h"
 	"stdbool.h"
 
-1516142484 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.h
+1516183707 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.h
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -74,12 +74,12 @@
 	"object.h"
 	"SDL.h"
 
-1516131349 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.c
+1516183707 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.c
 	"utilities.h"
 
-1516140719 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\settings.c
+1516206995 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\settings.c
 
-1516142388 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
+1516216811 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -92,7 +92,7 @@
 	"object.h"
 	"homescreen.h"
 
-1516039279 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.c
+1516211577 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.c
 	"object.h"
 
 1516039279 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.h

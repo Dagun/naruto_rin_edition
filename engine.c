@@ -36,12 +36,12 @@ int engine_collisionGround(PPlayer ply, PObject obj) {
     return 1;
 }
 
-void engine_clouds(PObject obj, float deltaTime) {
-    object_setFrameTime(obj,object_getFrameTime(obj)+deltaTime);
+void engine_clouds(PObject obj) {
     if(object_getFrameTime(obj)> 14) {
         object_setFrameTime(obj,0);
     }
-    switch((int) object_getFrameTime(obj)) {
+    float tmpFrameTime = object_getFrameTime(obj);
+    switch((int) tmpFrameTime) {
     case 1: object_setObjectPositionX(obj,-500); break;
      case 2:object_setObjectPositionX(obj,-200); break;
     case 3: object_setObjectPositionX(obj,0); break;

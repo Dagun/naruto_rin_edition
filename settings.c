@@ -1,3 +1,5 @@
+
+
 //SCREEN
 const int height = 1080;
 const int width = 1980;
@@ -44,12 +46,13 @@ const int rin_textureWidth = 100;
 const int rin_textureHeight = 6800;
 const int rin_characterWidth = 100;
 const int rin_characterHeight = 100;
+const int rin_strength = 5;
 
 //SEXY JUTSU
 const int sexyjutsu_frameWidth = 130;
 const int sexyjutsu_frameHeight = 130;
 const int sexyjutsu_textureWidth = 130;
-const int sexyjutsu_textureHeight = 5590;
+const int sexyjutsu_textureHeight = 5460;
 const int sexyjutsu_characterWidth = 300;
 const int sexyjutsu_characterHeight = 300;
 

@@ -7,6 +7,9 @@ typedef struct player *PPlayer;
 
 PPlayer player_create();
 
+bool player_getDealDamage(PPlayer player);
+void player_setDealDamage(PPlayer player, bool value);
+
 bool player_getCanHit(PPlayer player);
 void player_setCanHit(PPlayer player, bool value);
 
@@ -39,7 +42,7 @@ int* player_getPlayerRectPY(PPlayer player);
 int player_getPlayerRectX(PPlayer player);
 int player_getPlayerRectY(PPlayer player);
 
-int player_hit(PPlayer player, int frameBegin, int frameEnd);
+int player_hit(PPlayer player,PPlayer player2, int frameBegin, int frameEnd);
 
 void player_setIsDoneHitting(PPlayer player, bool value);
 bool player_getIsDoneHitting(PPlayer player);

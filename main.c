@@ -80,370 +80,524 @@ extern const int cloud_Width;
 
 bool initializedSucces = true;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
+    bool retry = true;
+    bool clicked = false;
 
-    if(SDL_Init(SDL_INIT_VIDEO)!=0) {
+    if(SDL_Init(SDL_INIT_VIDEO)!=0)
+    {
 
-    printf("Unable to initialize SDL: %s\n",SDL_GetError());
+        printf("Unable to initialize SDL: %s\n",SDL_GetError());
         initializedSucces = false;
     }
 
-    if(SDL_Init(SDL_INIT_GAMECONTROLLER)!= 0) {
-         printf("Unable to initialize SDL: %s\n",SDL_GetError());
+    if(SDL_Init(SDL_INIT_GAMECONTROLLER)!= 0)
+    {
+        printf("Unable to initialize SDL: %s\n",SDL_GetError());
         initializedSucces = false;
     }
     int imgFlag = IMG_INIT_JPG | IMG_INIT_PNG;
-    if(!(IMG_Init(imgFlag) & imgFlag)) {
+    if(!(IMG_Init(imgFlag) & imgFlag))
+    {
         printf("Unable to initialize SDL Image: %s\n",IMG_GetError());
         initializedSucces = false;
     }
 
     SDL_GameController *controller1 = NULL;
-    if(SDL_NumJoysticks() < 1) {
+    if(SDL_NumJoysticks() < 1)
+    {
         printf("No controller found!\n");
-    } else {
+    }
+    else
+    {
         controller1 = SDL_GameControllerOpen(0);
-        if(controller1 == NULL) {
+        if(controller1 == NULL)
+        {
             printf("Cannot connect with controller: SDL ERROR: %s",SDL_GetError());
         }
     }
 
-    int prevTime = 0;
-    int currentTime = 0;
-    float deltaTime = 0;
+    while(retry)
+    {
+        int prevTime = 0;
+        int currentTime = 0;
+        float deltaTime = 0;
 
-    float homeScreenTime=0;
-    bool runSettings = false;
+        float homeScreenTime=0;
+        bool runSettings = false;
 
-    bool homeScreenRunning = true;
-    bool choosePlayerRunning = true;
-    bool running = true;
+        bool homeScreenRunning = true;
+        bool choosePlayerRunning = true;
+        bool running = true;
 
-    SDL_Window *homeScreenWindow= SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, widthHomeScreen, heightHomeScreen,SDL_WINDOW_SHOWN);
-    SDL_Renderer *homeScreenRenderer = SDL_CreateRenderer(homeScreenWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    SDL_Event homeScreenEvent;
+        SDL_Window *homeScreenWindow= SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, widthHomeScreen, heightHomeScreen,SDL_WINDOW_SHOWN);
+        SDL_Renderer *homeScreenRenderer = SDL_CreateRenderer(homeScreenWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        SDL_Event homeScreenEvent;
 
-    /*SDL_Texture *homeScreenBackground = LoadTexture("images/homeScreen/background.png",homeScreenRenderer);
-    if(homeScreenBackground == NULL ) {
-        printf("Unable to load Texture\n");background
-        initializedSucces = false;
-        homeScreenRunning = false;
-    }*/
+        retry = false;
 
-    PObject sexyjutsu = object_create();
-    object_setFrameTime(sexyjutsu,0);
-    object_setTextureWidth(sexyjutsu,sexyjutsu_textureWidth);
-    object_setTextureHeight(sexyjutsu,sexyjutsu_textureHeight);
-    object_setObjectRectW(sexyjutsu,sexyjutsu_frameWidth);
-    object_setObjectRectH(sexyjutsu,sexyjutsu_frameHeight);
-    object_setObjectPositionW(sexyjutsu,sexyjutsu_characterWidth);
-    object_setObjectPositionH(sexyjutsu,sexyjutsu_characterHeight);
-    object_setObjectPositionX(sexyjutsu,40);
-    object_setObjectPositionY(sexyjutsu,500);
-    object_setTexturePath(sexyjutsu,homeScreenRenderer,"images/sexyjutsu/sexyjutsu.png");
-
-    PObject background2 = object_create();
-    object_setFrameTime(background2,0);
-    object_setTextureWidth(background2,background_textureWidth);
-    object_setTextureHeight(background2,background_textureHeight);
-    object_setObjectRectW(background2,background_frameWidth);
-    object_setObjectRectH(background2,background_frameHeight);
-    object_setObjectPositionW(background2,background_characterWidth);
-    object_setObjectPositionH(background2,background_characterHeight);
-    object_setObjectPositionX(background2,0);
-    object_setObjectPositionY(background2,0);
-    object_setTexturePath(background2,homeScreenRenderer,"images/homeScreen/background.png");
-
-    PObject unknown = object_create();
-    object_setTextureWidth(unknown,unknownWidth);
-    object_setTextureHeight(unknown,unknownHeight);
-    object_setObjectRectW(unknown,unknownWidth);
-    object_setObjectRectH(unknown,unknownHeight);
-    object_setObjectPositionW(unknown,unknownWidth);
-    object_setObjectPositionH(unknown,unknownHeight);
-    object_setObjectPositionX(unknown,200);
-    object_setObjectPositionY(unknown,430);
-    object_setTexturePath(unknown,homeScreenRenderer,"images/homeScreen/unknown.png");
-
-    PObject unknown2 = object_create();
-    object_setTextureWidth(unknown2,unknownWidth);
-    object_setTextureHeight(unknown2,unknownHeight);
-    object_setObjectRectW(unknown2,unknownWidth);
-    object_setObjectRectH(unknown2,unknownHeight);
-    object_setObjectPositionW(unknown2,unknownWidth);
-    object_setObjectPositionH(unknown2,unknownHeight);
-    object_setObjectPositionX(unknown2,200);
-    object_setObjectPositionY(unknown2,430);
-    object_setTexturePath(unknown2,homeScreenRenderer,"images/homeScreen/unknown2.png");
-
-    PObject unknown3 = object_create();
-    object_setTextureWidth(unknown3,unknownWidth);
-    object_setTextureHeight(unknown3,unknownHeight);
-    object_setObjectRectW(unknown3,unknownWidth);
-    object_setObjectRectH(unknown3,unknownHeight);
-    object_setObjectPositionW(unknown3,unknownWidth);
-    object_setObjectPositionH(unknown3,unknownHeight);
-    object_setObjectPositionX(unknown3,200);
-    object_setObjectPositionY(unknown3,530);
-    object_setTexturePath(unknown3,homeScreenRenderer,"images/homeScreen/unknown.png");
-
-    PObject unknown4 = object_create();
-    object_setTextureWidth(unknown4,unknownWidth);
-    object_setTextureHeight(unknown4,unknownHeight);
-    object_setObjectRectW(unknown4,unknownWidth);
-    object_setObjectRectH(unknown4,unknownHeight);
-    object_setObjectPositionW(unknown4,unknownWidth);
-    object_setObjectPositionH(unknown4,unknownHeight);
-    object_setObjectPositionX(unknown4,200);
-    object_setObjectPositionY(unknown4,530);
-    object_setTexturePath(unknown4,homeScreenRenderer,"images/homeScreen/unknown2.png");
-
-    PObject logo = object_create();
-    object_setTextureWidth(logo,logoWidth);
-    object_setTextureHeight(logo,logoHeight);
-    object_setObjectRectW(logo,logoWidth);
-    object_setObjectRectH(logo,logoHeight);
-    object_setObjectPositionW(logo,logoWidth);
-    object_setObjectPositionH(logo,logoHeight);
-    object_setObjectPositionX(logo,350);
-    object_setObjectPositionY(logo,230);
-    object_setTexturePath(logo,homeScreenRenderer,"images/homeScreen/logo.png");
-
-    PObject text = object_create();
-    object_setTextureWidth(text,textWidth);
-    object_setTextureHeight(text,textHeight);
-    object_setObjectRectW(text,textWidth);
-    object_setObjectRectH(text,textHeight);
-    object_setObjectPositionW(text,textWidth-100);
-    object_setObjectPositionH(text,textHeight+50);
-    object_setObjectPositionX(text,20);
-    object_setObjectPositionY(text,70);
-    object_setTexturePath(text,homeScreenRenderer,"images/homeScreen/text.png");
-
-
-    PObject settings = object_create();
-    object_setTextureWidth(settings,settingsWidth);
-    object_setTextureHeight(settings,settingsHeight);
-    object_setObjectRectW(settings,settingsWidth);
-    object_setObjectRectH(settings,settingsHeight);
-    object_setObjectPositionW(settings,settingsWidth);
-    object_setObjectPositionH(settings,settingsHeight);
-    object_setObjectPositionX(settings,240);
-    object_setObjectPositionY(settings,530);
-    object_setTexturePath(settings,homeScreenRenderer,"images/homeScreen/settings.png");
-
-    PObject exit = object_create();
-    object_setTextureWidth(exit,exitWidth);
-    object_setTextureHeight(exit,exitHeight);
-    object_setObjectRectW(exit,exitWidth);
-    object_setObjectRectH(exit,exitHeight);
-    object_setObjectPositionW(exit,exitWidth);
-    object_setObjectPositionH(exit,exitHeight);
-    object_setObjectPositionX(exit,340);
-    object_setObjectPositionY(exit,630);
-    object_setTexturePath(exit,homeScreenRenderer,"images/homeScreen/exit.png");
-
-    PObject start = object_create();
-    object_setTextureWidth(start,startWidth);
-    object_setTextureHeight(start,startHeight);
-    object_setObjectRectW(start,startWidth);
-    object_setObjectRectH(start,startHeight);
-    object_setObjectPositionW(start,startWidth);
-    object_setObjectPositionH(start,startHeight);
-    object_setObjectPositionX(start,310);
-    object_setObjectPositionY(start,430);
-    object_setTexturePath(start,homeScreenRenderer,"images/homeScreen/start.png");
-
-
-    PObject settings2 = object_create();
-    object_setTextureWidth(settings2,settingsWidth);
-    object_setTextureHeight(settings2,settingsHeight);
-    object_setObjectRectW(settings2,settingsWidth);
-    object_setObjectRectH(settings2,settingsHeight);
-    object_setObjectPositionW(settings2,settingsWidth);
-    object_setObjectPositionH(settings2,settingsHeight);
-    object_setObjectPositionX(settings2,240);
-    object_setObjectPositionY(settings2,530);
-    object_setTexturePath(settings2,homeScreenRenderer,"images/homeScreen/settings2.png");
-
-    PObject exit2 = object_create();
-    object_setTextureWidth(exit2,exitWidth);
-    object_setTextureHeight(exit2,exitHeight);
-    object_setObjectRectW(exit2,exitWidth);
-    object_setObjectRectH(exit2,exitHeight);
-    object_setObjectPositionW(exit2,exitWidth);
-    object_setObjectPositionH(exit2,exitHeight);
-    object_setObjectPositionX(exit2,340);
-    object_setObjectPositionY(exit2,630);
-    object_setTexturePath(exit2,homeScreenRenderer,"images/homeScreen/exit2.png");
-
-    PObject start2 = object_create();
-    object_setTextureWidth(start2,startWidth);
-    object_setTextureHeight(start2,startHeight);
-    object_setObjectRectW(start2,startWidth);
-    object_setObjectRectH(start2,startHeight);
-    object_setObjectPositionW(start2,startWidth);
-    object_setObjectPositionH(start2,startHeight);
-    object_setObjectPositionX(start2,310);
-    object_setObjectPositionY(start2,430);
-    object_setTexturePath(start2,homeScreenRenderer,"images/homeScreen/start2.png");
-
-    int currentChoose = 1;
-
-    int homeScreenAnimationShow = 1;
-
-    bool currentChanged = false;
-    bool direction = true;
-
-    swapValues(&start,&start2);
-
-    while(homeScreenRunning) {
-
-        prevTime = currentTime;
-        currentTime = SDL_GetTicks();
-        deltaTime = (currentTime - prevTime) / 1000.0f;
-        player_setFrameTime(background2, player_getFrameTime(background2)+deltaTime);
-        player_setFrameTime(sexyjutsu, player_getFrameTime(sexyjutsu)+deltaTime);
-        homeScreenTime += deltaTime;
-
-        if(homeScreenTime>=1 && homeScreenTime <= 2) {
-            object_setLeft(logo,true);
-        } else if(homeScreenTime >= 2){
-            object_setLeft(logo,false);
-            homeScreenTime = 0;
-        }
-
-        object_setObjectPositionY(logo,230);
+        PObject sexyjutsu = object_create();
+        object_setFrameTime(sexyjutsu,0);
+        object_setTextureWidth(sexyjutsu,sexyjutsu_textureWidth);
+        object_setTextureHeight(sexyjutsu,sexyjutsu_textureHeight);
+        object_setObjectRectW(sexyjutsu,sexyjutsu_frameWidth);
+        object_setObjectRectH(sexyjutsu,sexyjutsu_frameHeight);
+        object_setObjectPositionW(sexyjutsu,sexyjutsu_characterWidth);
+        object_setObjectPositionH(sexyjutsu,sexyjutsu_characterHeight);
         object_setObjectPositionX(sexyjutsu,40);
-        object_setLeft(sexyjutsu,false);
+        object_setObjectPositionY(sexyjutsu,500);
+        object_setTexturePath(sexyjutsu,homeScreenRenderer,"images/sexyjutsu/sexyjutsu.png");
 
-        while(SDL_PollEvent(&homeScreenEvent)) {
-            if(homeScreenEvent.type == SDL_QUIT) {
-                running = false;
-                homeScreenRunning = false;
-                choosePlayerRunning = false;
+        PObject background2 = object_create();
+        object_setFrameTime(background2,0);
+        object_setTextureWidth(background2,background_textureWidth);
+        object_setTextureHeight(background2,background_textureHeight);
+        object_setObjectRectW(background2,background_frameWidth);
+        object_setObjectRectH(background2,background_frameHeight);
+        object_setObjectPositionW(background2,background_characterWidth);
+        object_setObjectPositionH(background2,background_characterHeight);
+        object_setObjectPositionX(background2,0);
+        object_setObjectPositionY(background2,0);
+        object_setTexturePath(background2,homeScreenRenderer,"images/homeScreen/background.png");
+
+        PObject unknown = object_create();
+        object_setTextureWidth(unknown,unknownWidth);
+        object_setTextureHeight(unknown,unknownHeight);
+        object_setObjectRectW(unknown,unknownWidth);
+        object_setObjectRectH(unknown,unknownHeight);
+        object_setObjectPositionW(unknown,unknownWidth);
+        object_setObjectPositionH(unknown,unknownHeight);
+        object_setObjectPositionX(unknown,200);
+        object_setObjectPositionY(unknown,430);
+        object_setTexturePath(unknown,homeScreenRenderer,"images/homeScreen/unknown.png");
+
+        PObject unknown2 = object_create();
+        object_setTextureWidth(unknown2,unknownWidth);
+        object_setTextureHeight(unknown2,unknownHeight);
+        object_setObjectRectW(unknown2,unknownWidth);
+        object_setObjectRectH(unknown2,unknownHeight);
+        object_setObjectPositionW(unknown2,unknownWidth);
+        object_setObjectPositionH(unknown2,unknownHeight);
+        object_setObjectPositionX(unknown2,200);
+        object_setObjectPositionY(unknown2,430);
+        object_setTexturePath(unknown2,homeScreenRenderer,"images/homeScreen/unknown2.png");
+
+        PObject unknown3 = object_create();
+        object_setTextureWidth(unknown3,unknownWidth);
+        object_setTextureHeight(unknown3,unknownHeight);
+        object_setObjectRectW(unknown3,unknownWidth);
+        object_setObjectRectH(unknown3,unknownHeight);
+        object_setObjectPositionW(unknown3,unknownWidth);
+        object_setObjectPositionH(unknown3,unknownHeight);
+        object_setObjectPositionX(unknown3,200);
+        object_setObjectPositionY(unknown3,530);
+        object_setTexturePath(unknown3,homeScreenRenderer,"images/homeScreen/unknown.png");
+
+        PObject unknown4 = object_create();
+        object_setTextureWidth(unknown4,unknownWidth);
+        object_setTextureHeight(unknown4,unknownHeight);
+        object_setObjectRectW(unknown4,unknownWidth);
+        object_setObjectRectH(unknown4,unknownHeight);
+        object_setObjectPositionW(unknown4,unknownWidth);
+        object_setObjectPositionH(unknown4,unknownHeight);
+        object_setObjectPositionX(unknown4,200);
+        object_setObjectPositionY(unknown4,530);
+        object_setTexturePath(unknown4,homeScreenRenderer,"images/homeScreen/unknown2.png");
+
+        PObject logo = object_create();
+        object_setTextureWidth(logo,logoWidth);
+        object_setTextureHeight(logo,logoHeight);
+        object_setObjectRectW(logo,logoWidth);
+        object_setObjectRectH(logo,logoHeight);
+        object_setObjectPositionW(logo,logoWidth);
+        object_setObjectPositionH(logo,logoHeight);
+        object_setObjectPositionX(logo,350);
+        object_setObjectPositionY(logo,230);
+        object_setTexturePath(logo,homeScreenRenderer,"images/homeScreen/logo.png");
+
+        PObject text = object_create();
+        object_setTextureWidth(text,textWidth);
+        object_setTextureHeight(text,textHeight);
+        object_setObjectRectW(text,textWidth);
+        object_setObjectRectH(text,textHeight);
+        object_setObjectPositionW(text,textWidth-100);
+        object_setObjectPositionH(text,textHeight+50);
+        object_setObjectPositionX(text,20);
+        object_setObjectPositionY(text,70);
+        object_setTexturePath(text,homeScreenRenderer,"images/homeScreen/text.png");
+
+
+        PObject settings = object_create();
+        object_setTextureWidth(settings,settingsWidth);
+        object_setTextureHeight(settings,settingsHeight);
+        object_setObjectRectW(settings,settingsWidth);
+        object_setObjectRectH(settings,settingsHeight);
+        object_setObjectPositionW(settings,settingsWidth);
+        object_setObjectPositionH(settings,settingsHeight);
+        object_setObjectPositionX(settings,240);
+        object_setObjectPositionY(settings,530);
+        object_setTexturePath(settings,homeScreenRenderer,"images/homeScreen/settings.png");
+
+        PObject exit = object_create();
+        object_setTextureWidth(exit,exitWidth);
+        object_setTextureHeight(exit,exitHeight);
+        object_setObjectRectW(exit,exitWidth);
+        object_setObjectRectH(exit,exitHeight);
+        object_setObjectPositionW(exit,exitWidth);
+        object_setObjectPositionH(exit,exitHeight);
+        object_setObjectPositionX(exit,340);
+        object_setObjectPositionY(exit,630);
+        object_setTexturePath(exit,homeScreenRenderer,"images/homeScreen/exit.png");
+
+        PObject start = object_create();
+        object_setTextureWidth(start,startWidth);
+        object_setTextureHeight(start,startHeight);
+        object_setObjectRectW(start,startWidth);
+        object_setObjectRectH(start,startHeight);
+        object_setObjectPositionW(start,startWidth);
+        object_setObjectPositionH(start,startHeight);
+        object_setObjectPositionX(start,310);
+        object_setObjectPositionY(start,430);
+        object_setTexturePath(start,homeScreenRenderer,"images/homeScreen/start.png");
+
+
+        PObject settings2 = object_create();
+        object_setTextureWidth(settings2,settingsWidth);
+        object_setTextureHeight(settings2,settingsHeight);
+        object_setObjectRectW(settings2,settingsWidth);
+        object_setObjectRectH(settings2,settingsHeight);
+        object_setObjectPositionW(settings2,settingsWidth);
+        object_setObjectPositionH(settings2,settingsHeight);
+        object_setObjectPositionX(settings2,240);
+        object_setObjectPositionY(settings2,530);
+        object_setTexturePath(settings2,homeScreenRenderer,"images/homeScreen/settings2.png");
+
+        PObject exit2 = object_create();
+        object_setTextureWidth(exit2,exitWidth);
+        object_setTextureHeight(exit2,exitHeight);
+        object_setObjectRectW(exit2,exitWidth);
+        object_setObjectRectH(exit2,exitHeight);
+        object_setObjectPositionW(exit2,exitWidth);
+        object_setObjectPositionH(exit2,exitHeight);
+        object_setObjectPositionX(exit2,340);
+        object_setObjectPositionY(exit2,630);
+        object_setTexturePath(exit2,homeScreenRenderer,"images/homeScreen/exit2.png");
+
+        PObject start2 = object_create();
+        object_setTextureWidth(start2,startWidth);
+        object_setTextureHeight(start2,startHeight);
+        object_setObjectRectW(start2,startWidth);
+        object_setObjectRectH(start2,startHeight);
+        object_setObjectPositionW(start2,startWidth);
+        object_setObjectPositionH(start2,startHeight);
+        object_setObjectPositionX(start2,310);
+        object_setObjectPositionY(start2,430);
+        object_setTexturePath(start2,homeScreenRenderer,"images/homeScreen/start2.png");
+
+        int currentChoose = 1;
+
+        int homeScreenAnimationShow = 1;
+
+        bool currentChanged = false;
+        bool direction = true;
+
+        swapValues(&start,&start2);
+
+        while(homeScreenRunning)
+        {
+
+            prevTime = currentTime;
+            currentTime = SDL_GetTicks();
+            deltaTime = (currentTime - prevTime) / 1000.0f;
+            player_setFrameTime(background2, player_getFrameTime(background2)+deltaTime);
+            player_setFrameTime(sexyjutsu, player_getFrameTime(sexyjutsu)+deltaTime);
+            homeScreenTime += deltaTime;
+
+            if(homeScreenTime>=1 && homeScreenTime <= 2)
+            {
+                object_setLeft(logo,true);
             }
-            if(homeScreenEvent.type == SDL_KEYUP) {
-                if(homeScreenEvent.key.keysym.sym == SDLK_DOWN) {
-                    currentChoose++;
-                    currentChanged = true;
-                    direction = true;
-                    if(currentChoose > 3) {
-                        currentChoose = 1;
+            else if(homeScreenTime >= 2)
+            {
+                object_setLeft(logo,false);
+                homeScreenTime = 0;
+            }
+
+            object_setObjectPositionY(logo,230);
+            object_setObjectPositionX(sexyjutsu,40);
+            object_setLeft(sexyjutsu,false);
+
+            while(SDL_PollEvent(&homeScreenEvent))
+            {
+                if(homeScreenEvent.type == SDL_QUIT)
+                {
+                    running = false;
+                    homeScreenRunning = false;
+                    choosePlayerRunning = false;
+                }
+                else if(homeScreenEvent.type == SDL_MOUSEMOTION)
+                {
+                    //printf("X: %d | Y: %d\n",homeScreenEvent.motion.x, homeScreenEvent.motion.y);
+                    if(homeScreenEvent.motion.x > 220 && homeScreenEvent.motion.x < 620)
+                    {
+                        if(homeScreenEvent.motion.y > 400 && homeScreenEvent.motion.y < 520)
+                        {
+                            if(currentChoose != 1)
+                            {
+                                if(currentChoose == 3) direction = true;
+                                if(currentChoose == 2) direction = false;
+                                currentChoose = 1;
+                                currentChanged = true;
+                            }
+                        }
+                        else if(homeScreenEvent.motion.y > 520 && homeScreenEvent.motion.y < 620)
+                        {
+                            if(currentChoose != 2)
+                            {
+                                if(currentChoose == 1) direction = true;
+                                if(currentChoose == 3) direction = false;
+                                currentChoose = 2;
+                                currentChanged = true;
+                            }
+                        }
+                        else if(homeScreenEvent.motion.y > 620 && homeScreenEvent.motion.y < 720)
+                        {
+                            if(currentChoose != 3)
+                            {
+                                if(currentChoose == 1) direction = false;
+                                if(currentChoose==2) direction = true;
+                                currentChoose = 3;
+                                currentChanged = true;
+                            }
+                        }
                     }
-                } else if(homeScreenEvent.key.keysym.sym == SDLK_UP) {
+                }
+                else if(homeScreenEvent.type == SDL_MOUSEBUTTONUP)
+                {
+                    if(homeScreenEvent.button.button == SDL_BUTTON_LEFT)
+                    {
+                        if(clicked == false) {
+                            clicked = true;
+                            goto return1;
+                        } else {
+                            clicked = false;
+                        }
+                    }
+                }
+                if(homeScreenEvent.type == SDL_KEYUP)
+                {
+                    if(homeScreenEvent.key.keysym.sym == SDLK_DOWN)
+                    {
+                        currentChoose++;
+                        currentChanged = true;
+                        direction = true;
+                        if(currentChoose > 3)
+                        {
+                            currentChoose = 1;
+                        }
+                    }
+                    else if(homeScreenEvent.key.keysym.sym == SDLK_UP)
+                    {
                         currentChoose--;
                         currentChanged = true;
                         direction = false;
-                        if(currentChoose < 1) {
+                        if(currentChoose < 1)
+                        {
                             currentChoose = 3;
                         }
-                }else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN) {
-                        switch(currentChoose) {
-                        case 1: homeScreenRunning = false; break;
-                        case 2: homeScreenAnimationShow = 0; runSettings = true;
-                        direction = true;
-                        swapValues(&settings,&settings2);
-                        swapValues(&exit,&exit2);
-                        object_setObjectPositionY(settings,200);
-                        object_setObjectPositionX(sexyjutsu,550);
-                        object_setObjectPositionY(logo,40);
-                        object_setLeft(sexyjutsu,true);
-                        currentChanged = false;
-                        currentChoose = 3;
-                        while(runSettings==true) {
+                    }
+                    else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN)
+                    {
+                        return1:
+                        switch(currentChoose)
+                        {
+                        case 1:
+                            homeScreenRunning = false;
+                            break;
+                        case 2:
+                            homeScreenAnimationShow = 0;
+                            runSettings = true;
+                            direction = true;
+                            swapValues(&settings,&settings2);
+                            swapValues(&exit,&exit2);
+                            object_setObjectPositionY(settings,200);
+                            object_setObjectPositionX(sexyjutsu,550);
+                            object_setObjectPositionY(logo,40);
+                            object_setLeft(sexyjutsu,true);
+                            currentChanged = false;
+                            currentChoose = 3;
+                            while(runSettings==true)
+                            {
                                 homeScreenTime += deltaTime;
                                 prevTime = currentTime;
                                 currentTime = SDL_GetTicks();
                                 deltaTime = (currentTime - prevTime) / 1000.0f;
-                                 player_setFrameTime(background2, player_getFrameTime(background2)+deltaTime);
-                                 player_setFrameTime(sexyjutsu, player_getFrameTime(sexyjutsu)+deltaTime);
-                               while(SDL_PollEvent(&homeScreenEvent)) {
-                                    if(homeScreenEvent.type == SDL_QUIT) {
+                                player_setFrameTime(background2, player_getFrameTime(background2)+deltaTime);
+                                player_setFrameTime(sexyjutsu, player_getFrameTime(sexyjutsu)+deltaTime);
+                                while(SDL_PollEvent(&homeScreenEvent))
+                                {
+                                   // printf("%d\n",currentChoose);
+                                    if(homeScreenEvent.type == SDL_QUIT)
+                                    {
                                         running = false;
                                         homeScreenRunning = false;
                                         choosePlayerRunning = false;
                                         runSettings=false;
                                     }
-                                if(homeScreenEvent.type == SDL_KEYDOWN) {
-                                } else if(homeScreenEvent.key.keysym.sym == SDLK_DOWN) {
-                                        currentChoose++;
-                                        currentChanged = true;
-                                        direction = true;
-                                        if(currentChoose > 3) {
-                                            currentChoose = 1;
+                                    if(homeScreenEvent.type == SDL_MOUSEMOTION)
+                                    {
+                                        if(homeScreenEvent.motion.x > 220 && homeScreenEvent.motion.x < 620)
+                                        {
+                                            if(homeScreenEvent.motion.y > 400 && homeScreenEvent.motion.y < 520)
+                                            {
+                                                if(currentChoose != 1)
+                                                {
+                                                    if(currentChoose == 3) direction = true;
+                                                    if(currentChoose == 2) direction = false;
+                                                    currentChoose = 1;
+                                                    currentChanged = true;
+                                                }
+                                            }
+                                            else if(homeScreenEvent.motion.y > 520 && homeScreenEvent.motion.y < 620)
+                                            {
+                                                if(currentChoose != 2)
+                                                {
+                                                    if(currentChoose == 1) direction = true;
+                                                    if(currentChoose == 3) direction = false;
+                                                    currentChoose = 2;
+                                                    currentChanged = true;
+                                                }
+                                            }
+                                            else if(homeScreenEvent.motion.y > 620 && homeScreenEvent.motion.y < 720)
+                                            {
+                                                if(currentChoose != 3)
+                                                {
+                                                    if(currentChoose == 1) direction = false;
+                                                    if(currentChoose==2) direction = true;
+                                                    currentChoose = 3;
+                                                    currentChanged = true;
+                                                }
+                                            }
                                         }
-                                } else if(homeScreenEvent.key.keysym.sym == SDLK_UP) {
-                                        currentChoose--;
-                                        currentChanged = true;
-                                        direction = false;
-                                        if(currentChoose < 1) {
-                                            currentChoose = 3;
-                                        }
-                                }else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN) {
-                                    switch(currentChoose) {
-                                case 1: break;
-                                case 2: break;
-                                case 3:
+                                    } else if(homeScreenEvent.type == SDL_MOUSEBUTTONUP)
+                                {
+                                    if(homeScreenEvent.button.button == SDL_BUTTON_LEFT)
+                                    {
+                                      //  if(clicked == false) {
+                                      //      clicked = true;
+                                            goto return2;
+                                      //  } else {
+                                      //      clicked = false;
+                                      //  }
+
+                                    }
+                                }
+                                if(homeScreenEvent.type == SDL_KEYDOWN)
+                                {
+                                }
+                                else if(homeScreenEvent.key.keysym.sym == SDLK_DOWN)
+                                {
+                                    currentChoose++;
+                                    currentChanged = true;
+                                    direction = true;
+                                    if(currentChoose > 3)
+                                    {
+                                        currentChoose = 1;
+                                    }
+                                }
+                                else if(homeScreenEvent.key.keysym.sym == SDLK_UP)
+                                {
+                                    currentChoose--;
+                                    currentChanged = true;
+                                    direction = false;
+                                    if(currentChoose < 1)
+                                    {
+                                        currentChoose = 3;
+                                    }
+                                }
+                                else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN)
+                                {
+                                    return2:
+                                    switch(currentChoose)
+                                    {
+                                    case 1:
+                                        break;
+                                    case 2:
+                                        break;
+                                    case 3:
 
 
-                                    swapValues(&exit,&exit2);
-                                    object_setObjectPositionY(settings,530);
-                                    swapValues(&settings,&settings2);
-                                    currentChanged = false;
-                                    currentChoose = 2;
-                                    runSettings=false;
-                                    homeScreenAnimationShow = true;
-                                    break;
+                                        swapValues(&exit,&exit2);
+                                        object_setObjectPositionY(settings,530);
+                                        swapValues(&settings,&settings2);
+                                        currentChanged = false;
+                                        currentChoose = 2;
+                                        runSettings=false;
+                                        homeScreenAnimationShow = true;
+                                        break;
                                     }
                                 }
                             }
 
-                            if(currentChanged == true) {
-                                switch(currentChoose){
+                            if(currentChanged == true)
+                            {
+                                switch(currentChoose)
+                                {
                                 case 2:
 
-                                            if(direction) {
-                                                swapValues(&unknown,&unknown2);
-                                                swapValues(&unknown3,&unknown4);
-                                            } else if(!direction){
-                                                swapValues(&unknown3,&unknown4);
-                                                swapValues(&exit,&exit2);
-                                            }
+                                    if(direction)
+                                    {
+                                        swapValues(&unknown,&unknown2);
+                                        swapValues(&unknown3,&unknown4);
+                                    }
+                                    else if(!direction)
+                                    {
+                                        swapValues(&unknown3,&unknown4);
+                                        swapValues(&exit,&exit2);
+                                    }
                                     break;
                                 case 3:
 
-                                            if(direction){
-                                                swapValues(&unknown3,&unknown4);
-                                                swapValues(&exit,&exit2);
-                                            } else if(!direction){
-                                                swapValues(&exit,&exit2);
-                                                swapValues(&unknown,&unknown2);
-                                            }
+                                    if(direction)
+                                    {
+                                        swapValues(&unknown3,&unknown4);
+                                        swapValues(&exit,&exit2);
+                                    }
+                                    else if(!direction)
+                                    {
+                                        swapValues(&exit,&exit2);
+                                        swapValues(&unknown,&unknown2);
+                                    }
                                     break;
                                 case 1:
-                                            if(direction){
-                                                swapValues(&exit,&exit2);
-                                                swapValues(&unknown,&unknown2);
-                                            }else if(!direction){
-                                                swapValues(&unknown,&unknown2);
-                                                swapValues(&unknown3,&unknown4);
-                                            }
+                                    if(direction)
+                                    {
+                                        swapValues(&exit,&exit2);
+                                        swapValues(&unknown,&unknown2);
+                                    }
+                                    else if(!direction)
+                                    {
+                                        swapValues(&unknown,&unknown2);
+                                        swapValues(&unknown3,&unknown4);
+                                    }
                                     break;
                                 }
                                 currentChanged = false;
                             }
 
-                            if(homeScreenTime>=1 && homeScreenTime <= 2) {
+                            if(homeScreenTime>=1 && homeScreenTime <= 2)
+                            {
                                 object_setLeft(logo,true);
-                            } else if(homeScreenTime >= 2){
+                            }
+                            else if(homeScreenTime >= 2)
+                            {
                                 object_setLeft(logo,false);
                                 homeScreenTime = 0;
                             }
 
-                            //SDL_RenderCopy(homeScreenRenderer,homeScreenBackground,NULL,NULL);
                             animation_create(object_getPFrameTime(background2),object_getObjectRectPY(background2),object_getObjectRectPX(background2),4,-260,780,0.8f,background_frameHeight);
-                            animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),object_getObjectRectPX(sexyjutsu),43,-130,5460,0.25f,sexyjutsu_frameHeight);
+                            animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),object_getObjectRectPX(sexyjutsu),43,-130,5330,0.25f,sexyjutsu_frameHeight);
                             animation_create(object_getPFrameTime(logo),object_getObjectRectPY(logo),object_getObjectRectPX(logo),0,-logoHeight,0,0.5f,logoHeight);
                             animation_create(object_getPFrameTime(settings),object_getObjectRectPY(settings),object_getObjectRectPX(settings),0,-settingsHeight,0,0.5f,settingsHeight);
                             animation_create(object_getPFrameTime(exit),object_getObjectRectPY(exit),object_getObjectRectPX(exit),0,-exitHeight,0,0.5f,exitHeight);
@@ -459,49 +613,64 @@ int main(int argc, char* argv[]) {
                             SDL_RenderPresent(homeScreenRenderer);
                         }
                         break;
-                        case 3: running = false; choosePlayerRunning = false; homeScreenRunning = false; break;
-                        }
+                    case 3:
+                        running = false;
+                        choosePlayerRunning = false;
+                        homeScreenRunning = false;
+                        break;
+                    }
                 }
             }
         }
 
-        if(currentChanged == true) {
-            switch(currentChoose){
+        if(currentChanged == true)
+        {
+            switch(currentChoose)
+            {
             case 2:
 
-                        if(direction) {
-                            swapValues(&start,&start2);
-                            swapValues(&settings,&settings2);
-                        } else if(!direction){
-                            swapValues(&settings,&settings2);
-                            swapValues(&exit,&exit2);
-                        }
+                if(direction)
+                {
+                    swapValues(&start,&start2);
+                    swapValues(&settings,&settings2);
+                }
+                else if(!direction)
+                {
+                    swapValues(&settings,&settings2);
+                    swapValues(&exit,&exit2);
+                }
                 break;
             case 3:
 
-                        if(direction){
-                            swapValues(&settings,&settings2);
-                            swapValues(&exit,&exit2);
-                        } else if(!direction){
-                            swapValues(&exit,&exit2);
-                            swapValues(&start,&start2);
-                        }
+                if(direction)
+                {
+                    swapValues(&settings,&settings2);
+                    swapValues(&exit,&exit2);
+                }
+                else if(!direction)
+                {
+                    swapValues(&exit,&exit2);
+                    swapValues(&start,&start2);
+                }
                 break;
             case 1:
-                        if(direction){
-                            swapValues(&exit,&exit2);
-                            swapValues(&start,&start2);
-                        }else if(!direction){
-                            swapValues(&start,&start2);
-                            swapValues(&settings,&settings2);
-                        }
+                if(direction)
+                {
+                    swapValues(&exit,&exit2);
+                    swapValues(&start,&start2);
+                }
+                else if(!direction)
+                {
+                    swapValues(&start,&start2);
+                    swapValues(&settings,&settings2);
+                }
                 break;
             }
             currentChanged = false;
         }
 
         animation_create(object_getPFrameTime(background2),object_getObjectRectPY(background2),object_getObjectRectPX(background2),4,-260,780,0.8f,background_frameHeight);
-        animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),object_getObjectRectPX(sexyjutsu),43,-130,5460,0.25f,sexyjutsu_frameHeight);
+        animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),object_getObjectRectPX(sexyjutsu),42,-130,sexyjutsu_textureHeight-sexyjutsu_frameHeight,0.25f,sexyjutsu_frameHeight);
         animation_create(object_getPFrameTime(logo),object_getObjectRectPY(logo),object_getObjectRectPX(logo),0,-logoHeight,0,0.5f,logoHeight);
 
         animation_create(object_getPFrameTime(text),object_getObjectRectPY(text),object_getObjectRectPX(text),0,-textHeight,0,0.5f,textHeight);
@@ -509,7 +678,8 @@ int main(int argc, char* argv[]) {
         animation_create(object_getPFrameTime(exit),object_getObjectRectPY(exit),object_getObjectRectPX(exit),0,-exitHeight,0,0.5f,exitHeight);
         animation_create(object_getPFrameTime(settings),object_getObjectRectPY(settings),object_getObjectRectPX(settings),0,-settingsHeight,0,0.5f,settingsHeight);
 
-        if(homeScreenAnimationShow == 1) {
+        if(homeScreenAnimationShow == 1)
+        {
             animation_show(homeScreenRenderer,NULL,background2,object_getLeft(background2));
             animation_show(homeScreenRenderer,NULL,sexyjutsu,object_getLeft(sexyjutsu));
             animation_show(homeScreenRenderer,NULL,logo,object_getLeft(logo));
@@ -523,10 +693,8 @@ int main(int argc, char* argv[]) {
     }
 
     SDL_DestroyRenderer(homeScreenRenderer);
-    //SDL_DestroyTexture(homeScreenBackground);
     SDL_DestroyWindow(homeScreenWindow);
 
-    //homeScreenBackground = NULL;
     homeScreenWindow = NULL;
     homeScreenRenderer = NULL;
 
@@ -548,11 +716,12 @@ int main(int argc, char* argv[]) {
     background2 = NULL;
     sexyjutsu = NULL;
 
-
     object_objectRemove(exit);
     object_objectRemove(exit2);
     exit = NULL;
     exit2 = NULL;
+
+
 
     object_objectRemove(settings);
     object_objectRemove(settings2);
@@ -566,13 +735,13 @@ int main(int argc, char* argv[]) {
 
     float gravityTimer = 0;
 
-
     SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_FULLSCREEN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_Event event;
 
     SDL_Texture *background = LoadTexture("images/background1/background.png",renderer);
-    if(background == NULL ) {
+    if(background == NULL )
+    {
         printf("Unable to load Texture\n");
         initializedSucces = false;
     }
@@ -590,6 +759,83 @@ int main(int argc, char* argv[]) {
     player_setPlayerPositionX(player1,300);
     player_setPlayerPositionY(player1,300);
     player_setTexturePath(player1,renderer,"images/rin/rin_nohararight.png");
+
+    PObject transparency = object_create();
+    object_setTextureWidth(transparency,100);
+    object_setTextureHeight(transparency,100);
+    object_setObjectRectW(transparency,100);
+    object_setObjectRectH(transparency,100);
+    object_setObjectPositionW(transparency,width);
+    object_setObjectPositionH(transparency,height);
+    object_setObjectPositionX(transparency,0);
+    object_setObjectPositionY(transparency,0);
+    object_setTexturePath(transparency,renderer,"images/pauseMenu/transparency.png");
+
+    PObject continuetext = object_create();
+    object_setTextureWidth(continuetext,442);
+    object_setTextureHeight(continuetext,82);
+    object_setObjectRectW(continuetext,442);
+    object_setObjectRectH(continuetext,82);
+    object_setObjectPositionW(continuetext,442);
+    object_setObjectPositionH(continuetext,82);
+    object_setObjectPositionX(continuetext,750);
+    object_setObjectPositionY(continuetext,300);
+    object_setTexturePath(continuetext,renderer,"images/pauseMenu/continue.png");
+
+    PObject continuetext2 = object_create();
+    object_setTextureWidth(continuetext2,442);
+    object_setTextureHeight(continuetext2,82);
+    object_setObjectRectW(continuetext2,442);
+    object_setObjectRectH(continuetext2,82);
+    object_setObjectPositionW(continuetext2,442);
+    object_setObjectPositionH(continuetext2,82);
+    object_setObjectPositionX(continuetext2,750);
+    object_setObjectPositionY(continuetext2,300);
+    object_setTexturePath(continuetext2,renderer,"images/pauseMenu/continue2.png");
+
+    PObject exit_2 = object_create();
+    object_setTextureWidth(exit_2,161);
+    object_setTextureHeight(exit_2,81);
+    object_setObjectRectW(exit_2,161);
+    object_setObjectRectH(exit_2,81);
+    object_setObjectPositionW(exit_2,161);
+    object_setObjectPositionH(exit_2,81);
+    object_setObjectPositionX(exit_2,870);
+    object_setObjectPositionY(exit_2,700);
+    object_setTexturePath(exit_2,renderer,"images/pauseMenu/exit.png");
+
+    PObject exit_22 = object_create();
+    object_setTextureWidth(exit_22,161);
+    object_setTextureHeight(exit_22,81);
+    object_setObjectRectW(exit_22,161);
+    object_setObjectRectH(exit_22,81);
+    object_setObjectPositionW(exit_22,161);
+    object_setObjectPositionH(exit_22,81);
+    object_setObjectPositionX(exit_22,870);
+    object_setObjectPositionY(exit_22,700);
+    object_setTexturePath(exit_22,renderer,"images/pauseMenu/exit2.png");
+
+    PObject btm = object_create();
+    object_setTextureWidth(btm,616);
+    object_setTextureHeight(btm,82);
+    object_setObjectRectW(btm,616);
+    object_setObjectRectH(btm,82);
+    object_setObjectPositionW(btm,616);
+    object_setObjectPositionH(btm,82);
+    object_setObjectPositionX(btm,650);
+    object_setObjectPositionY(btm,500);
+    object_setTexturePath(btm,renderer,"images/pauseMenu/btm.png");
+
+    PObject btm2 = object_create();
+    object_setTextureWidth(btm2,616);
+    object_setTextureHeight(btm2,82);
+    object_setObjectRectW(btm2,616);
+    object_setObjectRectH(btm2,82);
+    object_setObjectPositionW(btm2,616);
+    object_setObjectPositionH(btm2,82);
+    object_setObjectPositionX(btm2,650);
+    object_setObjectPositionY(btm2,500);
+    object_setTexturePath(btm2,renderer,"images/pauseMenu/btm2.png");
 
     PPlayer player2 = player_create();
     player_setTextureWidth(player2,rin_textureWidth);
@@ -636,172 +882,398 @@ int main(int argc, char* argv[]) {
     object_setObjectRectH(cloud,cloud_frameHeight);
     object_setObjectPositionW(cloud,cloud_Width);
     object_setObjectPositionH(cloud,cloud_Height);
-    object_setObjectPositionX(cloud,500);
+    object_setObjectPositionX(cloud,-600);
     object_setObjectPositionY(cloud,30);
     object_setTexturePath(cloud,renderer,"images/background1/cloud.png");
 
-    while(running && initializedSucces == true) {
+    bool pause = false;
+
+    swapValues(&continuetext2,&continuetext);
+
+    while(running && initializedSucces == true)
+    {
 
         prevTime = currentTime;
         currentTime = SDL_GetTicks();
         deltaTime = (currentTime - prevTime) / 1000.0f;
         const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-        while(SDL_PollEvent(&event)) {
-            if(event.type == SDL_QUIT) {
+        // printf("P1: %d | P2: %d\n",player_getHealth(player1),player_getHealth(player2));
+
+        while(SDL_PollEvent(&event))
+        {
+            if(event.type == SDL_QUIT)
+            {
                 running = false;
-            } else if(event.type == SDL_CONTROLLERBUTTONDOWN) {
-                if(event.cbutton.button == SDL_CONTROLLER_BUTTON_A ) {
-                    if(player_getDead(player1)==false) {
+            }
+            else if(event.type == SDL_CONTROLLERBUTTONDOWN)
+            {
+                if(event.cbutton.button == SDL_CONTROLLER_BUTTON_A )
+                {
+                    if(player_getDead(player1)==false)
+                    {
                         player_setCanJump(player1,true);
                         player_setCurDoing(player1,6);
-                     }
-                } else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_B) {
-
-                } else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_Y) {
-
-                } else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_X) {
+                    }
+                }
+                else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_B)
+                {
 
                 }
-            } else if(event.type == SDL_CONTROLLERAXISMOTION) {
+                else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_Y)
+                {
+
+                }
+                else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_X)
+                {
+
+                }
+            }
+            else if(event.type == SDL_CONTROLLERAXISMOTION)
+            {
                 //if(event.caxis.value )
-            }else if(event.type == SDL_MOUSEBUTTONDOWN) {
-                if(event.button.button == SDL_BUTTON_LEFT){
+            }
+            else if(event.type == SDL_MOUSEBUTTONDOWN && pause)
+            {
+                if(event.button.button == SDL_BUTTON_LEFT)
+                {
+                   // if(clicked == false) {
+                   //     clicked = true;
+                        goto return3;
 
-                } else if(event.button.button == SDL_BUTTON_RIGHT) {
+                  //  } else if(clicked==true){
+                  //      clicked = false;
+                   // }
+                }
+                else if(event.button.button == SDL_BUTTON_RIGHT)
+                {
 
                 }
-            } else if(event.type == SDL_KEYUP) {
-                switch(event.key.keysym.sym) {
+            }
+            else if(event.type == SDL_KEYUP)
+            {
+                switch(event.key.keysym.sym)
+                {
                 case SDLK_u:
                     player_setHealth(player1,player_getHealth(player1)-10);
                     break;
+                case SDLK_ESCAPE:
+                    if(pause==true)
+                    {
+                        pause = false;
+                    }
+                    else if(pause==false)
+                    {
+                        pause = true;
+                    }
+                    break;
+                case SDLK_DOWN:
+                    currentChoose++;
+                    currentChanged = true;
+                    direction = true;
+                    if(currentChoose > 3)
+                    {
+                        currentChoose = 1;
+                    }
+                    break;
+                case SDLK_UP:
+                    currentChoose--;
+                    currentChanged = true;
+                    direction = false;
+                    if(currentChoose < 1)
+                    {
+                        currentChoose = 3;
+                    }
+                    break;
+                case SDLK_RETURN:
+                    return3:
+                    switch(currentChoose)
+                    {
+                    case 1:
+                        pause = false;
+                        break;
+                    case 2:
+                        retry = true;
+                        pause = false;
+                        running = false;
+                        clicked = true;
+                        break;
+                    case 3:
+                        running = false;
+                        break;
+                    }
+                    break;
                 }
-            } else if(event.type == SDL_MOUSEMOTION) {
-                //printf("X: %d | Y: %d\n",event.motion.x, event.motion.y);
+            }
+            else if(event.type == SDL_MOUSEMOTION)
+            {
+                //printf("%d - %d\n",event.motion.x,event.motion.y);
+                if(event.motion.x > 600 && event.motion.x < 1300)
+                    {
+                        if(event.motion.y > 400 && event.motion.y < 520)
+                        {
+                            if(currentChoose != 1)
+                            {
+                                if(currentChoose == 3) direction = true;
+                                if(currentChoose == 2) direction = false;
+                                currentChoose = 1;
+                                currentChanged = true;
+                            }
+                        }
+                        else if(event.motion.y > 520 && event.motion.y < 620)
+                        {
+                            if(currentChoose != 2)
+                            {
+                                if(currentChoose == 1) direction = true;
+                                if(currentChoose == 3) direction = false;
+                                currentChoose = 2;
+                                currentChanged = true;
+                            }
+                        }
+                        else if(event.motion.y > 620 && event.motion.y < 720)
+                        {
+                            if(currentChoose != 3)
+                            {
+                                if(currentChoose == 1) direction = false;
+                                if(currentChoose==2) direction = true;
+                                currentChoose = 3;
+                                currentChanged = true;
+                            }
+                        }
+                    }
             }
         }
-        if(state[SDL_SCANCODE_RCTRL]) {
-            if(player_getDead(player2)==false) {
-                player_setCanJump(player2,true);
-                player_setCurDoing(player2,6);
+        if(pause==false)
+        {
+            if(state[SDL_SCANCODE_RCTRL])
+            {
+                if(player_getDead(player2)==false)
+                {
+                    player_setCanJump(player2,true);
+                    player_setCurDoing(player2,6);
+                }
             }
-        }
-        if(state[SDL_SCANCODE_KP_4]) {
-               if(player_getDead(player2)==false) {
+            if(state[SDL_SCANCODE_KP_4])
+            {
+                if(player_getDead(player2)==false)
+                {
                     player_setCurDoing(player2,3);
                     player_setIsHitting(player2,true);
                     player_setIsDoneHitting(player2,false);
                 }
-        } else if(state[SDL_SCANCODE_RIGHT]) {
-            if(player_getDead(player2)==false) {
-                if(state[SDL_SCANCODE_RSHIFT]) {
-                    int currentX = (player_getPlayerPositionX(player2) + ((player_getMoveSpeed(player2)+150) * deltaTime));
-                    player_setPlayerPositionX(player2,currentX);
-                    player_setCurDoing(player2,5);
-                    player_setLeft(player2,false);
-                } else if(!state[SDL_SCANCODE_RSHIFT]) {
-                    int currentX = player_getPlayerPositionX(player2) + (player_getMoveSpeed(player2) * deltaTime);
-                    player_setPlayerPositionX(player2,currentX);
-                    player_setCurDoing(player2,1);
-                    player_setLeft(player2,false);
+            }
+            else if(state[SDL_SCANCODE_RIGHT])
+            {
+                if(player_getDead(player2)==false)
+                {
+                    if(state[SDL_SCANCODE_RSHIFT])
+                    {
+                        int currentX = (player_getPlayerPositionX(player2) + ((player_getMoveSpeed(player2)+150) * deltaTime));
+                        player_setPlayerPositionX(player2,currentX);
+                        player_setCurDoing(player2,5);
+                        player_setLeft(player2,false);
+                    }
+                    else if(!state[SDL_SCANCODE_RSHIFT])
+                    {
+                        int currentX = player_getPlayerPositionX(player2) + (player_getMoveSpeed(player2) * deltaTime);
+                        player_setPlayerPositionX(player2,currentX);
+                        player_setCurDoing(player2,1);
+                        player_setLeft(player2,false);
+                    }
                 }
             }
-        }else  if(state[SDL_SCANCODE_LEFT]) {
-            if(player_getDead(player2)==false) {
-                if(state[SDL_SCANCODE_RSHIFT]) {
-                    int currentX = (player_getPlayerPositionX(player2) - ((player_getMoveSpeed(player2)+150) * deltaTime));
-                    player_setPlayerPositionX(player2,currentX);
-                    player_setCurDoing(player2,5);
-                    player_setLeft(player2,true);
-                } else if(!state[SDL_SCANCODE_RSHIFT]) {
-                    int currentX = player_getPlayerPositionX(player2) - (player_getMoveSpeed(player2) * deltaTime);
-                    player_setPlayerPositionX(player2,currentX);
-                    player_setCurDoing(player2,0);
-                    player_setLeft(player2,true);
+            else  if(state[SDL_SCANCODE_LEFT])
+            {
+                if(player_getDead(player2)==false)
+                {
+                    if(state[SDL_SCANCODE_RSHIFT])
+                    {
+                        int currentX = (player_getPlayerPositionX(player2) - ((player_getMoveSpeed(player2)+150) * deltaTime));
+                        player_setPlayerPositionX(player2,currentX);
+                        player_setCurDoing(player2,5);
+                        player_setLeft(player2,true);
+                    }
+                    else if(!state[SDL_SCANCODE_RSHIFT])
+                    {
+                        int currentX = player_getPlayerPositionX(player2) - (player_getMoveSpeed(player2) * deltaTime);
+                        player_setPlayerPositionX(player2,currentX);
+                        player_setCurDoing(player2,0);
+                        player_setLeft(player2,true);
+                    }
                 }
             }
-        } else if(!state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT] && player_getOnGround(player2)==true&& player_getIsDoneHitting(player2) == true) {
-             if(player_getDead(player2)==false) {
-                   player_setCurDoing(player2,2);
+            else if(!state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT] && player_getOnGround(player2)==true&& player_getIsDoneHitting(player2) == true)
+            {
+                if(player_getDead(player2)==false)
+                {
+                    player_setCurDoing(player2,2);
+                }
             }
-        }
-
-        if(state[SDL_SCANCODE_SPACE]) {
-            if(player_getDead(player1)==false) {
-                player_setCanJump(player1,true);
-                player_setCurDoing(player1,6);
+            if(state[SDL_SCANCODE_SPACE])
+            {
+                if(player_getDead(player1)==false)
+                {
+                    player_setCanJump(player1,true);
+                    player_setCurDoing(player1,6);
+                }
             }
-        }
-        if(state[SDL_SCANCODE_F]) {
-            if(player_getDead(player1)==false) {
+            if(state[SDL_SCANCODE_F])
+            {
+                if(player_getDead(player1)==false)
+                {
                     player_setCurDoing(player1,3);
                     player_setIsHitting(player1,true);
                     player_setIsDoneHitting(player1,false);
-            }
-        } else if(state[SDL_SCANCODE_D]) {
-            if(player_getDead(player1)==false) {
-                if(state[SDL_SCANCODE_LSHIFT]) {
-                    int currentX = (player_getPlayerPositionX(player1) + ((player_getMoveSpeed(player1)+150) * deltaTime));
-                    player_setPlayerPositionX(player1,currentX);
-                    player_setCurDoing(player1,5);
-                    player_setLeft(player1,false);
-                } else if(!state[SDL_SCANCODE_LSHIFT]) {
-                    int currentX = player_getPlayerPositionX(player1) + (player_getMoveSpeed(player1) * deltaTime);
-                    player_setPlayerPositionX(player1,currentX);
-                    player_setCurDoing(player1,1);
-                    player_setLeft(player1,false);
                 }
             }
-        }else  if(state[SDL_SCANCODE_A]) {
-            if(player_getDead(player1)==false) {
-                if(state[SDL_SCANCODE_LSHIFT]) {
-                    int currentX = (player_getPlayerPositionX(player1) - ((player_getMoveSpeed(player1)+150) * deltaTime));
-                    player_setPlayerPositionX(player1,currentX);
-                    player_setCurDoing(player1,5);
-                    player_setLeft(player1,true);
-                } else if(!state[SDL_SCANCODE_LSHIFT]) {
-                    int currentX = player_getPlayerPositionX(player1) - (player_getMoveSpeed(player1) * deltaTime);
-                    player_setPlayerPositionX(player1,currentX);
-                    player_setCurDoing(player1,0);
-                    player_setLeft(player1,true);
+            else if(state[SDL_SCANCODE_D])
+            {
+                if(player_getDead(player1)==false)
+                {
+                    if(state[SDL_SCANCODE_LSHIFT])
+                    {
+                        int currentX = (player_getPlayerPositionX(player1) + ((player_getMoveSpeed(player1)+150) * deltaTime));
+                        player_setPlayerPositionX(player1,currentX);
+                        player_setCurDoing(player1,5);
+                        player_setLeft(player1,false);
+                    }
+                    else if(!state[SDL_SCANCODE_LSHIFT])
+                    {
+                        int currentX = player_getPlayerPositionX(player1) + (player_getMoveSpeed(player1) * deltaTime);
+                        player_setPlayerPositionX(player1,currentX);
+                        player_setCurDoing(player1,1);
+                        player_setLeft(player1,false);
+                    }
                 }
             }
-        } else if(!state[SDL_SCANCODE_A] && !state[SDL_SCANCODE_D] && player_getOnGround(player1)==true && player_getIsDoneHitting(player1) == true) {
-             if(player_getDead(player1)==false) {
+            else  if(state[SDL_SCANCODE_A])
+            {
+                if(player_getDead(player1)==false)
+                {
+                    if(state[SDL_SCANCODE_LSHIFT])
+                    {
+                        int currentX = (player_getPlayerPositionX(player1) - ((player_getMoveSpeed(player1)+150) * deltaTime));
+                        player_setPlayerPositionX(player1,currentX);
+                        player_setCurDoing(player1,5);
+                        player_setLeft(player1,true);
+                    }
+                    else if(!state[SDL_SCANCODE_LSHIFT])
+                    {
+                        int currentX = player_getPlayerPositionX(player1) - (player_getMoveSpeed(player1) * deltaTime);
+                        player_setPlayerPositionX(player1,currentX);
+                        player_setCurDoing(player1,0);
+                        player_setLeft(player1,true);
+                    }
+                }
+            }
+            else if(!state[SDL_SCANCODE_A] && !state[SDL_SCANCODE_D] && player_getOnGround(player1)==true && player_getIsDoneHitting(player1) == true)
+            {
+                if(player_getDead(player1)==false)
+                {
                     player_setCurDoing(player1,2);
+                }
             }
-        }
-        if(player_getHealth(player1)==0) {
-            if(player_getPlayerPositionY(player1)==1800) {
-                player_setFrameTime(player1,0);
+            if(player_getHealth(player1)==0)
+            {
+                if(player_getPlayerPositionY(player1)==1800)
+                {
+                    player_setFrameTime(player1,0);
+                }
+                player_setCurDoing(player1,4);
             }
-            player_setCurDoing(player1,4);
-        } else {
-           // printf("%d\n",player_getHealth(player1));
+            else
+            {
+                // printf("%d\n",player_getHealth(player1));
+            }
+            if(player_getHealth(player2)==0)
+            {
+                if(player_getPlayerPositionY(player2)==1800)
+                {
+                    player_setFrameTime(player2,0);
+                }
+                player_setCurDoing(player2,4);
+            }
+            else
+            {
+                // printf("%d\n",player_getHealth(player1));
+            }
         }
 
         //printf("%f\n",currentTime*deltaTime);
+        if(currentChanged==true)
+        {
+            switch(currentChoose)
+            {
+            case 2:
+                if(direction)
+                {
+                    swapValues(&continuetext2,&continuetext);
+                    swapValues(&btm,&btm2);
+                }
+                else if(!direction)
+                {
+                    swapValues(&btm,&btm2);
+                    swapValues(&exit_2,&exit_22);
+                }
+                break;
+            case 3:
 
+                if(direction)
+                {
+                    swapValues(&btm,&btm2);
+                    swapValues(&exit_2,&exit_22);
+                }
+                else if(!direction)
+                {
+                    swapValues(&continuetext,&continuetext2);
+                    swapValues(&exit_2,&exit_22);
+                }
+                break;
+            case 1:
+                if(direction)
+                {
+                    swapValues(&exit_2,&exit_22);
+                    swapValues(&continuetext2,&continuetext);
+                }
+                else if(!direction)
+                {
+                    swapValues(&continuetext,&continuetext2);
+                    swapValues(&btm,&btm2);
+                }
+            }
+            currentChanged = false;
+        }
+        // printf("P1: %d | P2: %d\n\n",player_getHealth(player1),player_getHealth(player2));
 
-        if((engine_playerCollision(player1,player2) == 1) && player_getLeft(player1)==false) {
+        if((engine_playerCollision(player1,player2) == 1) && player_getLeft(player1)==false)
+        {
             player_setCanHit(player1,true);
-        } else if((engine_playerCollision(player1,player2) == 2) && player_getLeft(player1)==true) {
+        }
+        else if((engine_playerCollision(player1,player2) == 2) && player_getLeft(player1)==true)
+        {
             player_setCanHit(player1,true);
-        } else {
+        }
+        else
+        {
             player_setCanHit(player1,false);
         }
 
-        if(engine_playerCollision(player2,player1) == 1 && player_getLeft(player2)==false) {
+        if(engine_playerCollision(player2,player1) == 1 && player_getLeft(player2)==false)
+        {
             player_setCanHit(player2,true);
-        } else if((engine_playerCollision(player2,player1) == 2) && player_getLeft(player2)==true) {
+        }
+        else if((engine_playerCollision(player2,player1) == 2) && player_getLeft(player2)==true)
+        {
             player_setCanHit(player2,true);
-        } else {
+        }
+        else
+        {
             player_setCanHit(player2,false);
         }
 
-        player_hit(player1,-100,300);
-        player_hit(player2,-100,300);
+        player_hit(player1,player2,-100,300);
+        player_hit(player2,player1,-100,300);
+
 
         engine_outSideMap(player1);
         engine_outSideMap(player2);
@@ -809,35 +1281,93 @@ int main(int argc, char* argv[]) {
         player_jump(player2,deltaTime);
         engine_gravity(&gravityTimer,deltaTime, player1, ground1 );
         engine_gravity(&gravityTimer,deltaTime, player2, ground1 );
-        engine_clouds(cloud,deltaTime);
+        engine_clouds(cloud);
 
-        object_setFrameTime(river,object_getFrameTime(river)+deltaTime);
-        object_setFrameTime(cloud,object_getFrameTime(cloud)+deltaTime);
-        player_setFrameTime(player1, player_getFrameTime(player1)+deltaTime);
-        player_setFrameTime(player2, player_getFrameTime(player2)+deltaTime);
 
-        switch(player_getCurDoing(player1)) {
-            case 0: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight); break;
-            case 1: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight); break;
-            case 2: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,5200,5700,0.25f,rin_frameHeight); break;
-            case 4: if(player_getDead(player1)==false || player_getPlayerRectY(player1) != 1800) { animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,1400,1800,0.1f,rin_frameHeight); } player_setDead(player1,true); break;
-            case 5: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,4600,5200,0.15f,rin_frameHeight); break;
-            case 6: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,4100,4600,0.15f,rin_frameHeight); break;
-            case 3: animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,-100,300,0.10f,rin_frameHeight); break;
+        if(pause==false)
+        {
+
+            object_setFrameTime(river,object_getFrameTime(river)+deltaTime);
+            object_setFrameTime(cloud,object_getFrameTime(cloud)+deltaTime);
+            player_setFrameTime(player1, player_getFrameTime(player1)+deltaTime);
+            player_setFrameTime(player2, player_getFrameTime(player2)+deltaTime);
+
+        }
+        if(player_getDead(player1))
+        {
+            player_setCurDoing(player1,4);
+        }
+        if(player_getDead(player2))
+        {
+            player_setCurDoing(player2,4);
         }
 
-        switch(player_getCurDoing(player2)) {
-            case 0: animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,6200,6700,0.15f,rin_frameHeight); break;
-            case 1: animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,6200,6700,0.15f,rin_frameHeight); break;
-            case 2: animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,5200,5700,0.25f,rin_frameHeight); break;
-            case 4: if(player_getDead(player2)==false || player_getPlayerRectY(player2) != 1800) { animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),4,1400,1800,0.1f,rin_frameHeight); } player_setDead(player2,true); break;
-            case 5: animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,4600,5200,0.15f,rin_frameHeight); break;
-            case 6: animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,4100,4600,0.15f,rin_frameHeight); break;
-            case 3: animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),4,-100,300,0.10f,rin_frameHeight); break;
+
+        switch(player_getCurDoing(player1))
+        {
+        case 0:
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight);
+            break;
+        case 1:
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight);
+            break;
+        case 2:
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,5200,5700,0.25f,rin_frameHeight);
+            break;
+        case 4:
+            if(player_getDead(player1)==false || player_getPlayerRectY(player1) != 1800)
+            {
+                animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,1400,1800,0.1f,rin_frameHeight);
+            }
+            player_setDead(player1,true);
+            break;
+        case 5:
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,4600,5200,0.15f,rin_frameHeight);
+            break;
+        case 6:
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,4100,4600,0.15f,rin_frameHeight);
+            break;
+        case 3:
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,-100,300,0.10f,rin_frameHeight);
+            break;
         }
+
+        switch(player_getCurDoing(player2))
+        {
+        case 0:
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,6200,6700,0.15f,rin_frameHeight);
+            break;
+        case 1:
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,6200,6700,0.15f,rin_frameHeight);
+            break;
+        case 2:
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,5200,5700,0.25f,rin_frameHeight);
+            break;
+        case 4:
+            if(player_getDead(player2)==false || player_getPlayerRectY(player2) != 1800)
+            {
+                animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),4,1400,1800,0.1f,rin_frameHeight);
+            }
+            player_setDead(player2,true);
+            break;
+        case 5:
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,4600,5200,0.15f,rin_frameHeight);
+            break;
+        case 6:
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,4100,4600,0.15f,rin_frameHeight);
+            break;
+        case 3:
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),4,-100,300,0.10f,rin_frameHeight);
+            break;
+        }
+
 
         animation_create(object_getPFrameTime(river),object_getObjectRectPY(river),object_getObjectRectPX(river),3,-111,222,0.5f,river_frameHeight);
         animation_create(object_getPFrameTime(ground1),object_getObjectRectPY(ground1),object_getObjectRectPX(ground1),0,-46,0,0.5f,46);
+        animation_create(object_getPFrameTime(transparency),object_getObjectRectPY(transparency),object_getObjectRectPX(transparency),0,-100,0,0.15,100);
+        animation_create(object_getPFrameTime(exit_2),object_getObjectRectPY(exit_2),object_getObjectRectPX(exit_2),0,-81,0,0.5f,81);
+        animation_create(object_getPFrameTime(btm),object_getObjectRectPY(btm),object_getObjectRectPX(btm),0,-80,0,0.5f,80);
+        animation_create(object_getPFrameTime(continuetext),object_getObjectRectPY(continuetext),object_getObjectRectPX(continuetext2),0,-79,0,0.5f,79);
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer,background,NULL,NULL);
@@ -846,6 +1376,18 @@ int main(int argc, char* argv[]) {
         animation_show(renderer,NULL,cloud,object_getLeft(cloud));
         animation_show(renderer,player1,NULL,player_getLeft(player1));
         animation_show(renderer,player2,NULL,player_getLeft(player2));
+
+        if(pause==true)
+        {
+
+            animation_show(renderer,NULL,transparency,object_getLeft(transparency));
+            animation_show(renderer,NULL,exit_2,object_getLeft(exit_2));
+            animation_show(renderer,NULL,btm,object_getLeft(btm));
+            animation_show(renderer,NULL,continuetext,object_getLeft(continuetext));
+
+        }
+
+
         SDL_RenderPresent(renderer);
     }
     player_playerRemove(player1);
@@ -860,6 +1402,22 @@ int main(int argc, char* argv[]) {
     object_objectRemove(cloud);
     cloud = NULL;
 
+    object_objectRemove(exit_22);
+    object_objectRemove(exit_2);
+    object_objectRemove(btm);
+    object_objectRemove(btm);
+    object_objectRemove(continuetext2);
+    object_objectRemove(continuetext);
+    object_objectRemove(transparency);
+
+    btm = NULL;
+    btm2 = NULL;
+    exit_2 = NULL;
+    exit_22 = NULL;
+    continuetext2 = NULL;
+    continuetext = NULL;
+    transparency = NULL;
+
     SDL_GameControllerClose(controller1);
     controller1 = NULL;
 
@@ -871,7 +1429,8 @@ int main(int argc, char* argv[]) {
     background = NULL;
     renderer = NULL;
     window = NULL;
+}
 
-    SDL_Quit();
-    return 0;
+SDL_Quit();
+return 0;
 }

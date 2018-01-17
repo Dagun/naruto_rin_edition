@@ -15,8 +15,10 @@ struct object {
 PObject object_create() {
     PObject obj = (PObject) malloc(sizeof(struct object));
     object_setMoveSpeed(obj,0);
+    object_setFrameTime(obj,0);
     object_setCurDoing(obj,0);
     object_setTextureHeight(obj,0);
+    object_setLeft(obj,false);
     object_setTextureWidth(obj,0);
     object_setObjectPositionX(obj,0);
     object_setObjectPositionY(obj,0);

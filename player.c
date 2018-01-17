@@ -1,6 +1,7 @@
 #include "player.h"
 
 extern const float rin_jumpDelay;
+extern const int rin_strength;
 
 struct player {
     float frameTime;
@@ -21,6 +22,7 @@ struct player {
     bool canHit;
     bool isDoneHitting;
     bool isHitting;
+    bool dealDamage;
 };
 
 bool player_getCanHit(PPlayer player) {
@@ -41,6 +43,7 @@ PPlayer player_create() {
     PPlayer ply = (PPlayer) malloc(sizeof(struct player));
     player_setHealth(ply,100);
     player_setDead(ply,0);
+    player_setFrameTime(ply,0);
     player_setMoveSpeed(ply,0);
     player_setCurDoing(ply,0);
     player_setTextureHeight(ply,0);
@@ -48,6 +51,7 @@ PPlayer player_create() {
     player_setPlayerPositionX(ply,0);
     player_setPlayerPositionY(ply,0);
     player_setPlayerPositionW(ply,0);
+    player_setDealDamage(ply,0);
     player_setPlayerPositionH(ply,0);
 
     player_setIsDoneHitting(ply,true);
@@ -65,6 +69,15 @@ PPlayer player_create() {
     player_setPlayerRectH(ply,0);
 
     return ply;
+}
+
+
+void player_setDealDamage(PPlayer player, bool value) {
+    player->dealDamage = value;
+}
+
+bool player_getDealDamage(PPlayer player) {
+    return player->dealDamage;
 }
 
 void player_setIsDoneHitting(PPlayer player, bool value) {
@@ -99,12 +112,15 @@ bool player_getCanJump(PPlayer player) {
     return player->canJump;
 }
 
-int player_hit(PPlayer player, int frameBegin, int frameEnd) {
+int player_hit(PPlayer player,PPlayer player2, int frameBegin, int frameEnd) {
     if(player_getIsDoneHitting(player)==false && player_getIsHitting(player)==true && player_getCurDoing(player)==3) {
         if(player_getCurDoing(player)==3) {
             if(player_getPlayerRectY(player) <= frameEnd &&  player_getPlayerRectY(player) >= frameBegin) {
                 if(player_getPlayerRectY(player) == frameEnd) {
                     player_setIsDoneHitting(player,true);
+                    if(player_getIsDoneHitting(player)==true) {
+                        player_setDealDamage(player,true);
+                    }
                     player_setIsHitting(player,false);
                 }
             }
@@ -112,6 +128,10 @@ int player_hit(PPlayer player, int frameBegin, int frameEnd) {
     } else {
         player_setIsDoneHitting(player,true);
         player_setIsHitting(player,false);
+    }
+    if(player_getDealDamage(player)==true && player_getPlayerRectY(player) >= -100 && player_getPlayerRectY(player) <= 200) {
+            player_setHealth(player2,player_getHealth(player2)-rin_strength);
+            player_setDealDamage(player,false);
     }
 }
 
