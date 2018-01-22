@@ -20,8 +20,8 @@ SDL_Texture *LoadTexture(char *filePath, SDL_Renderer *renderTarget) {
   return texture;
 }
 
-void swapValues(PObject **a, PObject **b) {
-  PObject *tmp = *a; *a = *b; *b = tmp;
+void swapValues(PObject *a, PObject *b) {
+  PObject tmp = *a; *a = *b; *b = tmp;
   tmp = NULL;
 }
 

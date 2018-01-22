@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "homescreen.h": "c",
+        "sdl_mixer.h": "c"
+    }
+}
