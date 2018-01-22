@@ -1,48 +1,70 @@
 # depslib dependency file v1.0
-1516382923 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\animation.c
+1516615608 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\animation.c
 	"animation.h"
 
-1516604076 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\animation.h
+1516615719 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\animation.h
 	<stdlib.h>
 	<stdio.h>
 	"SDL.h"
+	"SDL_image.h"
+	"SDL_mixer.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_mixer.h>
 	"player.h"
 	"object.h"
 	"stdbool.h"
 
-1516604816 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.h
+1516615055 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.h
 	<stdlib.h>
 	<stdio.h>
 	"SDL.h"
+	"SDL_image.h"
 	"SDL_mixer.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_mixer.h>
 	<stdbool.h>
 
-1516604048 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.h
+1516615055 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.h
 	<stdlib.h>
 	<stdio.h>
 	"SDL.h"
+	"SDL_image.h"
+	"SDL_mixer.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_mixer.h>
 	<stdbool.h>
 
 1516604418 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\engine.c
 	"engine.h"
 
-1516604076 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\engine.h
+1516615055 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\engine.h
 	<stdlib.h>
 	<stdio.h>
 	"SDL.h"
+	"SDL_image.h"
+	"SDL_mixer.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_mixer.h>
 	"player.h"
 	"object.h"
 
 1516291503 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\homescreen.c
 	"homescreen.h"
 
-1516291026 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\homescreen.h
+1516615055 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\homescreen.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	"SDL.h"
 	"SDL_image.h"
 	"SDL_mixer.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_mixer.h>
 	"utilities.h"
 	"animation.h"
 	"player.h"
@@ -50,28 +72,35 @@
 	"object.h"
 	"homescreen.h"
 
-1516607053 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.h
+1516615055 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.h
 	"object.h"
 	<stdlib.h>
 	<stdio.h>
 	"SDL.h"
 	"SDL_image.h"
+	"SDL_mixer.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_mixer.h>
 	<stdbool.h>
 
-1516383862 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
+1516615796 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	"SDL.h"
 	"SDL_image.h"
 	"SDL_mixer.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_mixer.h>
 	"utilities.h"
 	"animation.h"
 	"player.h"
 	"engine.h"
 	"object.h"
 
-1516604076 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.c
+1516607264 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\object.c
 	"object.h"
 
 1516141766 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\resources.rc
@@ -81,7 +110,12 @@
 1516607098 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.c
 	"utilities.h"
 
-1516604595 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c
+1516615055 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c
 	"player.h"
+	"SDL.h"
+	"SDL_image.h"
 	"SDL_mixer.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_mixer.h>
 

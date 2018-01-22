@@ -14,8 +14,6 @@
 #include "object.h"
 #include "stdbool.h"
 
-void animation_create(PPlayer ply, PObject obj, float *frameTime, int y,
-                      int frames, int frameBegin, int frameEnd, float speed,
-                      int frameHeight);
+void animation_create(PPlayer ply, PObject obj, float *frameTime, int y,int frames, int frameBegin, int frameEnd, float speed,int frameHeight);
 void animation_show(SDL_Renderer* renderer, PPlayer player, PObject object, bool left);
 void animation_clouds(PObject obj);

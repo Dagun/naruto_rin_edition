@@ -1,21 +1,22 @@
 #include "animation.h"
 
 void animation_create(PPlayer ply, PObject obj,float *frameTime,int y,int frames,int frameBegin, int frameEnd,float speed, int frameHeight){
+    printf("%d-\n",y);
     if(*frameTime>= speed) {
         *frameTime=0;
         if(y >= frameEnd || y < frameBegin)
         {
-          if(ply!=NULL) {
+          if(ply!=NULL && obj == NULL) {
             player_setPlayerRectY(ply, frameBegin);
           }
-          else {
+          if(ply==NULL && obj != NULL) {
             object_setObjectRectY(obj, frameBegin);
           }
         }
-        if(ply!=NULL) {
+        if(ply!=NULL && obj== NULL) {
           player_setPlayerRectY(ply,player_getPlayerRectY(ply) + frameHeight);
         }
-        else {
+        else if(ply==NULL && obj != NULL){
           object_setObjectRectY(obj, object_getObjectRectY(obj) + frameHeight);
         }
     }

@@ -605,13 +605,13 @@ int main(int argc, char* argv[])
                                 homeScreenTime = 0;
                             }
 
-                            animation_create(NULL, background2,object_getPFrameTime(background2),object_getObjectRectPY(background2),4,-260,780,0.8f,background_frameHeight);
-                            animation_create(NULL, sexyjutsu,object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),43,-130,5330,0.25f,sexyjutsu_frameHeight);
-                            animation_create(NULL, logo,object_getPFrameTime(logo),object_getObjectRectPY(logo),0,-logoHeight,0,0.5f,logoHeight);
-                            animation_create(NULL, settings,object_getPFrameTime(settings),object_getObjectRectPY(settings),0,-settingsHeight,0,0.5f,settingsHeight);
-                            animation_create(NULL, exit,object_getPFrameTime(exit),object_getObjectRectPY(exit),0,-exitHeight,0,0.5f,exitHeight);
-                            animation_create(NULL, unknown,object_getPFrameTime(unknown),object_getObjectRectPY(unknown),0,-unknownHeight,0,0.5f,unknownHeight);
-                            animation_create(NULL, unknown3,object_getPFrameTime(unknown3),object_getObjectRectPY(unknown3),0,-unknownHeight,0,0.5f,unknownHeight);
+                            animation_create(NULL, background2,object_getPFrameTime(background2),object_getObjectRectY(background2),4,-260,780,0.8f,background_frameHeight);
+                            animation_create(NULL, sexyjutsu,object_getPFrameTime(sexyjutsu),object_getObjectRectY(sexyjutsu),43,-130,5330,0.25f,sexyjutsu_frameHeight);
+                            animation_create(NULL, logo,object_getPFrameTime(logo),object_getObjectRectY(logo),0,-logoHeight,0,0.5f,logoHeight);
+                            animation_create(NULL, settings,object_getPFrameTime(settings),object_getObjectRectY(settings),0,-settingsHeight,0,0.5f,settingsHeight);
+                            animation_create(NULL, exit,object_getPFrameTime(exit),object_getObjectRectY(exit),0,-exitHeight,0,0.5f,exitHeight);
+                            animation_create(NULL, unknown,object_getPFrameTime(unknown),object_getObjectRectY(unknown),0,-unknownHeight,0,0.5f,unknownHeight);
+                            animation_create(NULL, unknown3,object_getPFrameTime(unknown3),object_getObjectRectY(unknown3),0,-unknownHeight,0,0.5f,unknownHeight);
                             animation_show(homeScreenRenderer,NULL,background2,object_getLeft(background2));
                             animation_show(homeScreenRenderer,NULL,sexyjutsu,object_getLeft(sexyjutsu));
                             animation_show(homeScreenRenderer,NULL,settings,object_getLeft(settings));
@@ -678,14 +678,14 @@ int main(int argc, char* argv[])
             currentChanged = false;
         }}
 
-        animation_create(NULL, background2,object_getPFrameTime(background2),object_getObjectRectPY(background2),4,-260,780,0.8f,background_frameHeight);
-        animation_create(NULL, sexyjutsu,object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),42,-130,sexyjutsu_textureHeight-sexyjutsu_frameHeight,0.25f,sexyjutsu_frameHeight);
-        animation_create(NULL, logo,object_getPFrameTime(logo),object_getObjectRectPY(logo),0,-logoHeight,0,0.5f,logoHeight);
+        animation_create(NULL, background2,object_getPFrameTime(background2),object_getObjectRectY(background2),4,-260,780,0.8f,background_frameHeight);
+        animation_create(NULL, sexyjutsu,object_getPFrameTime(sexyjutsu),object_getObjectRectY(sexyjutsu),42,-130,sexyjutsu_textureHeight-sexyjutsu_frameHeight,0.25f,sexyjutsu_frameHeight);
+        animation_create(NULL, logo,object_getPFrameTime(logo),object_getObjectRectY(logo),0,-logoHeight,0,0.5f,logoHeight);
 
-        animation_create(NULL, text,object_getPFrameTime(text),object_getObjectRectPY(text),0,-textHeight,0,0.5f,textHeight);
-        animation_create(NULL, start,object_getPFrameTime(start),object_getObjectRectPY(start),0,-startHeight,0,0.5f,startHeight);
-        animation_create(NULL, exit,object_getPFrameTime(exit),object_getObjectRectPY(exit),0,-exitHeight,0,0.5f,exitHeight);
-        animation_create(NULL, settings,object_getPFrameTime(settings),object_getObjectRectPY(settings),0,-settingsHeight,0,0.5f,settingsHeight);
+        animation_create(NULL, text,object_getPFrameTime(text),object_getObjectRectY(text),0,-textHeight,0,0.5f,textHeight);
+        animation_create(NULL, start,object_getPFrameTime(start),object_getObjectRectY(start),0,-startHeight,0,0.5f,startHeight);
+        animation_create(NULL, exit,object_getPFrameTime(exit),object_getObjectRectY(exit),0,-exitHeight,0,0.5f,exitHeight);
+        animation_create(NULL, settings,object_getPFrameTime(settings),object_getObjectRectY(settings),0,-settingsHeight,0,0.5f,settingsHeight);
 
         if(homeScreenAnimationShow == 1)
         {
@@ -1570,20 +1570,20 @@ int main(int argc, char* argv[])
 
 
 
-        animation_create(NULL, river,object_getPFrameTime(river),object_getObjectRectPY(river),3,-111,222,0.5f,river_frameHeight);
-        animation_create(NULL, ground1,object_getPFrameTime(ground1),object_getObjectRectPY(ground1),0,-46,0,0.5f,46);
-        animation_create(NULL, transparency,object_getPFrameTime(transparency),object_getObjectRectPY(transparency),0,-100,0,0.15,100);
-        animation_create(NULL, exit_2,object_getPFrameTime(exit_2),object_getObjectRectPY(exit_2),0,-81,0,0.5f,81);
-        animation_create(NULL, btm,object_getPFrameTime(btm),object_getObjectRectPY(btm),0,-80,0,0.5f,80);
-        animation_create(NULL, continuetext,object_getPFrameTime(continuetext),object_getObjectRectPY(continuetext),0,-79,0,0.5f,79);
-        animation_create(NULL, healthbar1,object_getPFrameTime(healthbar1),object_getObjectRectPY(healthbar1),0,-79,0,0.5f,79);
-        animation_create(NULL, health1,object_getPFrameTime(health1),object_getObjectRectPY(health1),0,-79,0,0.5f,79);
-        animation_create(NULL, healthbar2,object_getPFrameTime(healthbar2),object_getObjectRectPY(healthbar2),0,-79,0,0.5f,79);
-        animation_create(NULL, health2,object_getPFrameTime(health2),object_getObjectRectPY(health2),0,-79,0,0.5f,79);
-        animation_create(NULL, energy2,object_getPFrameTime(energy2),object_getObjectRectPY(energy2),0,-79,0,0.5f,79);
-        animation_create(NULL, energy1,object_getPFrameTime(energy1),object_getObjectRectPY(energy1),0,-79,0,0.5f,79);
-        animation_create(NULL, energybar1,object_getPFrameTime(energybar1),object_getObjectRectPY(energybar1),0,-79,0,0.5f,79);
-        animation_create(NULL, energybar2,object_getPFrameTime(energybar2),object_getObjectRectPY(energybar2),0,-79,0,0.5f,79);
+        animation_create(NULL, river,object_getPFrameTime(river),object_getObjectRectY(river),3,-111,222,0.5f,river_frameHeight);
+        animation_create(NULL, ground1,object_getPFrameTime(ground1),object_getObjectRectY(ground1),0,-46,0,0.5f,46);
+        animation_create(NULL, transparency,object_getPFrameTime(transparency),object_getObjectRectY(transparency),0,-100,0,0.15,100);
+        animation_create(NULL, exit_2,object_getPFrameTime(exit_2),object_getObjectRectY(exit_2),0,-81,0,0.5f,81);
+        animation_create(NULL, btm,object_getPFrameTime(btm),object_getObjectRectY(btm),0,-80,0,0.5f,80);
+        animation_create(NULL, continuetext,object_getPFrameTime(continuetext),object_getObjectRectY(continuetext),0,-79,0,0.5f,79);
+        animation_create(NULL, healthbar1,object_getPFrameTime(healthbar1),object_getObjectRectY(healthbar1),0,-79,0,0.5f,79);
+        animation_create(NULL, health1,object_getPFrameTime(health1),object_getObjectRectY(health1),0,-79,0,0.5f,79);
+        animation_create(NULL, healthbar2,object_getPFrameTime(healthbar2),object_getObjectRectY(healthbar2),0,-79,0,0.5f,79);
+        animation_create(NULL, health2,object_getPFrameTime(health2),object_getObjectRectY(health2),0,-79,0,0.5f,79);
+        animation_create(NULL, energy2,object_getPFrameTime(energy2),object_getObjectRectY(energy2),0,-79,0,0.5f,79);
+        animation_create(NULL, energy1,object_getPFrameTime(energy1),object_getObjectRectY(energy1),0,-79,0,0.5f,79);
+        animation_create(NULL, energybar1,object_getPFrameTime(energybar1),object_getObjectRectY(energybar1),0,-79,0,0.5f,79);
+        animation_create(NULL, energybar2,object_getPFrameTime(energybar2),object_getObjectRectY(energybar2),0,-79,0,0.5f,79);
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer,background,NULL,NULL);
