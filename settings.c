@@ -1,4 +1,4 @@
-
+//SOUNDS
 
 //SCREEN
 const int height = 1080;
@@ -6,14 +6,13 @@ const int width = 1980;
 
 //HOMESCREEN
 const int textHeight = 83;
-const int textWidth = 905;
+const int textWidth = 926;
 
 const int startHeight = 82;
 const int startWidth = 232;
 
 const int exitHeight = 81;
 const int exitWidth = 161;
-
 
 const int unknownHeight = 83;
 const int unknownWidth = 453;
@@ -31,12 +30,10 @@ const int background_textureHeight = 1040;
 const int background_characterWidth = 850;
 const int background_characterHeight = 900;
 
-
 const int heightHomeScreen = 900;
 const int widthHomeScreen = 850;
 
 //ETC
-
 const int outSideMapTolerance = 100;
 
 //RIN CHARACTER

@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_mixer.h"
+
 #include "utilities.h"
 #include "animation.h"
 #include "player.h"
 #include "engine.h"
 #include "object.h"
-#include "homescreen.h"
 
+//SOUNDS
 
 //SCREEN
 extern const int height;
@@ -79,31 +81,14 @@ extern const int cloud_Height;
 extern const int cloud_Width;
 
 
-bool initializedSucces = true;
-
 int main(int argc, char* argv[])
 {
+
+    bool initializedSucces = true;
     bool retry = true;
     bool clicked = false;
 
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)!=0)
-    {
-
-        printf("Unable to initialize SDL: %s\n",SDL_GetError());
-        initializedSucces = false;
-    }
-
-    if(SDL_Init(SDL_INIT_GAMECONTROLLER)!= 0)
-    {
-        printf("Unable to initialize SDL: %s\n",SDL_GetError());
-        initializedSucces = false;
-    }
-    int imgFlag = IMG_INIT_JPG | IMG_INIT_PNG;
-    if(!(IMG_Init(imgFlag) & imgFlag))
-    {
-        printf("Unable to initialize SDL Image: %s\n",IMG_GetError());
-        initializedSucces = false;
-    }
+    initializeSDL(&initializedSucces);
 
     SDL_GameController *controller1 = NULL;
     if(SDL_NumJoysticks() < 1)
@@ -327,6 +312,7 @@ int main(int argc, char* argv[])
             prevTime = currentTime;
             currentTime = SDL_GetTicks();
             deltaTime = (currentTime - prevTime) / 1000.0f;
+
             player_setFrameTime(background2, player_getFrameTime(background2)+deltaTime);
             player_setFrameTime(sexyjutsu, player_getFrameTime(sexyjutsu)+deltaTime);
             homeScreenTime += deltaTime;
@@ -402,9 +388,9 @@ int main(int argc, char* argv[])
                         }
                     }
                 }
-                if(homeScreenEvent.type == SDL_KEYUP)
+                if(homeScreenEvent.type == SDL_KEYUP ||homeScreenEvent.type == SDL_CONTROLLERBUTTONUP)
                 {
-                    if(homeScreenEvent.key.keysym.sym == SDLK_DOWN)
+                    if(homeScreenEvent.key.keysym.sym == SDLK_DOWN|| homeScreenEvent.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN)
                     {
                         currentChoose++;
                         currentChanged = true;
@@ -414,7 +400,7 @@ int main(int argc, char* argv[])
                             currentChoose = 1;
                         }
                     }
-                    else if(homeScreenEvent.key.keysym.sym == SDLK_UP)
+                    else if(homeScreenEvent.key.keysym.sym == SDLK_UP || homeScreenEvent.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP )
                     {
                         currentChoose--;
                         currentChanged = true;
@@ -424,7 +410,7 @@ int main(int argc, char* argv[])
                             currentChoose = 3;
                         }
                     }
-                    else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN)
+                    else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN|| homeScreenEvent.cbutton.button == SDL_CONTROLLER_BUTTON_A)
                     {
                         return1:
                         switch(currentChoose)
@@ -501,19 +487,18 @@ int main(int argc, char* argv[])
                                 {
                                     if(homeScreenEvent.button.button == SDL_BUTTON_LEFT)
                                     {
-                                      //  if(clicked == false) {
-                                      //      clicked = true;
+                                        //if(clicked == false) {
+                                         //   clicked = true;
                                             goto return2;
-                                      //  } else {
-                                      //      clicked = false;
+                                      // } else {
+                                        //    clicked = false;
                                       //  }
 
                                     }
                                 }
-                                if(homeScreenEvent.type == SDL_KEYDOWN)
+                               else if(homeScreenEvent.type == SDL_KEYDOWN || homeScreenEvent.type == SDL_CONTROLLERBUTTONUP)
                                 {
-                                }
-                                else if(homeScreenEvent.key.keysym.sym == SDLK_DOWN)
+                                if(homeScreenEvent.key.keysym.sym == SDLK_DOWN|| homeScreenEvent.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN)
                                 {
                                     currentChoose++;
                                     currentChanged = true;
@@ -523,7 +508,7 @@ int main(int argc, char* argv[])
                                         currentChoose = 1;
                                     }
                                 }
-                                else if(homeScreenEvent.key.keysym.sym == SDLK_UP)
+                                else if(homeScreenEvent.key.keysym.sym == SDLK_UP|| homeScreenEvent.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP)
                                 {
                                     currentChoose--;
                                     currentChanged = true;
@@ -533,7 +518,7 @@ int main(int argc, char* argv[])
                                         currentChoose = 3;
                                     }
                                 }
-                                else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN)
+                                else if(homeScreenEvent.key.keysym.sym == SDLK_RETURN|| homeScreenEvent.cbutton.button == SDL_CONTROLLER_BUTTON_A)
                                 {
                                     return2:
                                     switch(currentChoose)
@@ -556,6 +541,8 @@ int main(int argc, char* argv[])
                                     }
                                 }
                             }
+                                }
+
 
                             if(currentChanged == true)
                             {
@@ -613,13 +600,13 @@ int main(int argc, char* argv[])
                                 homeScreenTime = 0;
                             }
 
-                            animation_create(object_getPFrameTime(background2),object_getObjectRectPY(background2),object_getObjectRectPX(background2),4,-260,780,0.8f,background_frameHeight);
-                            animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),object_getObjectRectPX(sexyjutsu),43,-130,5330,0.25f,sexyjutsu_frameHeight);
-                            animation_create(object_getPFrameTime(logo),object_getObjectRectPY(logo),object_getObjectRectPX(logo),0,-logoHeight,0,0.5f,logoHeight);
-                            animation_create(object_getPFrameTime(settings),object_getObjectRectPY(settings),object_getObjectRectPX(settings),0,-settingsHeight,0,0.5f,settingsHeight);
-                            animation_create(object_getPFrameTime(exit),object_getObjectRectPY(exit),object_getObjectRectPX(exit),0,-exitHeight,0,0.5f,exitHeight);
-                            animation_create(object_getPFrameTime(unknown),object_getObjectRectPY(unknown),object_getObjectRectPX(unknown),0,-unknownHeight,0,0.5f,unknownHeight);
-                            animation_create(object_getPFrameTime(unknown3),object_getObjectRectPY(unknown3),object_getObjectRectPX(unknown3),0,-unknownHeight,0,0.5f,unknownHeight);
+                            animation_create(object_getPFrameTime(background2),object_getObjectRectPY(background2),4,-260,780,0.8f,background_frameHeight);
+                            animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),43,-130,5330,0.25f,sexyjutsu_frameHeight);
+                            animation_create(object_getPFrameTime(logo),object_getObjectRectPY(logo),0,-logoHeight,0,0.5f,logoHeight);
+                            animation_create(object_getPFrameTime(settings),object_getObjectRectPY(settings),0,-settingsHeight,0,0.5f,settingsHeight);
+                            animation_create(object_getPFrameTime(exit),object_getObjectRectPY(exit),0,-exitHeight,0,0.5f,exitHeight);
+                            animation_create(object_getPFrameTime(unknown),object_getObjectRectPY(unknown),0,-unknownHeight,0,0.5f,unknownHeight);
+                            animation_create(object_getPFrameTime(unknown3),object_getObjectRectPY(unknown3),0,-unknownHeight,0,0.5f,unknownHeight);
                             animation_show(homeScreenRenderer,NULL,background2,object_getLeft(background2));
                             animation_show(homeScreenRenderer,NULL,sexyjutsu,object_getLeft(sexyjutsu));
                             animation_show(homeScreenRenderer,NULL,settings,object_getLeft(settings));
@@ -638,7 +625,7 @@ int main(int argc, char* argv[])
                     }
                 }
             }
-        }
+
 
         if(currentChanged == true)
         {
@@ -684,16 +671,16 @@ int main(int argc, char* argv[])
                 break;
             }
             currentChanged = false;
-        }
+        }}
 
-        animation_create(object_getPFrameTime(background2),object_getObjectRectPY(background2),object_getObjectRectPX(background2),4,-260,780,0.8f,background_frameHeight);
-        animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),object_getObjectRectPX(sexyjutsu),42,-130,sexyjutsu_textureHeight-sexyjutsu_frameHeight,0.25f,sexyjutsu_frameHeight);
-        animation_create(object_getPFrameTime(logo),object_getObjectRectPY(logo),object_getObjectRectPX(logo),0,-logoHeight,0,0.5f,logoHeight);
+        animation_create(object_getPFrameTime(background2),object_getObjectRectPY(background2),4,-260,780,0.8f,background_frameHeight);
+        animation_create(object_getPFrameTime(sexyjutsu),object_getObjectRectPY(sexyjutsu),42,-130,sexyjutsu_textureHeight-sexyjutsu_frameHeight,0.25f,sexyjutsu_frameHeight);
+        animation_create(object_getPFrameTime(logo),object_getObjectRectPY(logo),0,-logoHeight,0,0.5f,logoHeight);
 
-        animation_create(object_getPFrameTime(text),object_getObjectRectPY(text),object_getObjectRectPX(text),0,-textHeight,0,0.5f,textHeight);
-        animation_create(object_getPFrameTime(start),object_getObjectRectPY(start),object_getObjectRectPX(start),0,-startHeight,0,0.5f,startHeight);
-        animation_create(object_getPFrameTime(exit),object_getObjectRectPY(exit),object_getObjectRectPX(exit),0,-exitHeight,0,0.5f,exitHeight);
-        animation_create(object_getPFrameTime(settings),object_getObjectRectPY(settings),object_getObjectRectPX(settings),0,-settingsHeight,0,0.5f,settingsHeight);
+        animation_create(object_getPFrameTime(text),object_getObjectRectPY(text),0,-textHeight,0,0.5f,textHeight);
+        animation_create(object_getPFrameTime(start),object_getObjectRectPY(start),0,-startHeight,0,0.5f,startHeight);
+        animation_create(object_getPFrameTime(exit),object_getObjectRectPY(exit),0,-exitHeight,0,0.5f,exitHeight);
+        animation_create(object_getPFrameTime(settings),object_getObjectRectPY(settings),0,-settingsHeight,0,0.5f,settingsHeight);
 
         if(homeScreenAnimationShow == 1)
         {
@@ -752,7 +739,7 @@ int main(int argc, char* argv[])
 
     float gravityTimer = 0;
 
-    SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_RESIZABLE);
+    SDL_Window *window = SDL_CreateWindow("Naruto: Rin Edition", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,SDL_WINDOW_BORDERLESS);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_Event event;
 
@@ -994,6 +981,52 @@ int main(int argc, char* argv[])
     object_setObjectPositionY(health2,945);
     object_setTexturePath(health2,renderer,"images/health.png");
 
+    PObject energybar1 = object_create();
+    object_setTextureWidth(energybar1,600);
+    object_setTextureHeight(energybar1,400);
+    object_setObjectRectW(energybar1,600);
+    object_setObjectRectH(energybar1,400);
+    object_setObjectPositionW(energybar1,350);
+    object_setObjectPositionH(energybar1,150);
+    object_setObjectPositionX(energybar1,50);
+    object_setObjectPositionY(energybar1,800);
+    object_setTexturePath(energybar1,renderer,"images/energybar.png");
+
+    PObject energy1 = object_create();
+    object_setTextureWidth(energy1,600);
+    object_setTextureHeight(energy1,400);
+    object_setObjectRectW(energy1,600);
+    object_setObjectRectH(energy1,400);
+    object_setObjectPositionW(energy1,250);
+    object_setObjectPositionH(energy1,50);
+    object_setObjectPositionX(energy1,120);
+    object_setObjectPositionY(energy1,845);
+    object_setTexturePath(energy1,renderer,"images/energy.png");
+
+    PObject energybar2 = object_create();
+    object_setTextureWidth(energybar2,600);
+    object_setTextureHeight(energybar2,400);
+    object_setObjectRectW(energybar2,600);
+    object_setObjectRectH(energybar2,400);
+    object_setObjectPositionW(energybar2,350);
+    object_setObjectPositionH(energybar2,150);
+    object_setObjectPositionX(energybar2,1500);
+    object_setLeft(energybar2,true);
+    object_setObjectPositionY(energybar2,800);
+    object_setTexturePath(energybar2,renderer,"images/energybar.png");
+
+    PObject energy2 = object_create();
+    object_setTextureWidth(energy2,600);
+    object_setTextureHeight(energy2,400);
+    object_setObjectRectW(energy2,600);
+    object_setObjectRectH(energy2,400);
+    object_setObjectPositionW(energy2,250);
+    object_setObjectPositionH(energy2,50);
+    object_setObjectPositionX(energy2,1780);
+    object_setLeft(energy2,true);
+    object_setObjectPositionY(energy2,845);
+    object_setTexturePath(energy2,renderer,"images/energy.png");
+
     bool pause = false;
 
     swapValues(&continuetext2,&continuetext);
@@ -1014,16 +1047,33 @@ int main(int argc, char* argv[])
             {
                 running = false;
             }
-            else if(event.type == SDL_CONTROLLERBUTTONDOWN)
+            else if(event.type == SDL_CONTROLLERBUTTONUP)
             {
                 if(event.cbutton.button == SDL_CONTROLLER_BUTTON_A )
                 {
+                    if(pause){
+                        switch(currentChoose)
+                        {
+                        case 1:
+                            pause = false;
+                            break;
+                        case 2:
+                            retry = true;
+                            pause = false;
+                            running = false;
+                            clicked = true;
+                            break;
+                        case 3:
+                            running = false;
+                            break;
+                        }
+                        } else {
                     if(player_getDead(player1)==false)
                     {
                         player_setCanJump(player1,true);
                         player_setCurDoing(player1,6);
                     }
-                }
+                }}
                 else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_B)
                 {
 
@@ -1033,15 +1083,43 @@ int main(int argc, char* argv[])
 
                 }
                 else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_X) {
-                    Mix_PlayChannel(-1,combo1,0);
                     player_setCurDoing(player1,3);
                     player_setIsHitting(player1,true);
                     player_setIsDoneHitting(player1,false);
+                } else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_START) {
+                    if(pause==true)
+                    {
+                        pause = false;
+                    }
+                    else if(pause==false)
+                    {
+                        pause = true;
+                    }
+                } else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
+                    if(pause){
+                    currentChoose--;
+                    currentChanged = true;
+                    direction = false;
+                    if(currentChoose < 1)
+                    {
+                        currentChoose = 3;
+                    }
+                    }
+                } else if(event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN){
+                    if(pause){
+                    currentChoose++;
+                    currentChanged = true;
+                    direction = true;
+                    if(currentChoose > 3)
+                    {
+                        currentChoose = 1;
+                    }
+                    }
+                    break;
                 }
             }
             else if(event.type == SDL_CONTROLLERAXISMOTION)
             {
-               printf("%d\n",SDL_GameControllerGetAxis(controller1,SDL_CONTROLLER_AXIS_TRIGGERLEFT));
                 //printf("%d\n",SDL_GameControllerGetAxis(controller1,SDL_CONTROLLER_AXIS_LEFTX ));
             }
             else if(event.type == SDL_MOUSEBUTTONDOWN && pause)
@@ -1050,6 +1128,7 @@ int main(int argc, char* argv[])
                 {
                    // if(clicked == false) {
                    //     clicked = true;
+                   if(pause)
                         goto return3;
 
                   //  } else if(clicked==true){
@@ -1079,6 +1158,7 @@ int main(int argc, char* argv[])
                     }
                     break;
                 case SDLK_DOWN:
+                    if(pause){
                     currentChoose++;
                     currentChanged = true;
                     direction = true;
@@ -1086,8 +1166,10 @@ int main(int argc, char* argv[])
                     {
                         currentChoose = 1;
                     }
+                    }
                     break;
                 case SDLK_UP:
+                    if(pause){
                     currentChoose--;
                     currentChanged = true;
                     direction = false;
@@ -1095,29 +1177,31 @@ int main(int argc, char* argv[])
                     {
                         currentChoose = 3;
                     }
+                    }
                     break;
                 case SDLK_RETURN:
-                    return3:
-                    switch(currentChoose)
-                    {
-                    case 1:
-                        pause = false;
-                        break;
-                    case 2:
-                        retry = true;
-                        pause = false;
-                        running = false;
-                        clicked = true;
-                        break;
-                    case 3:
-                        running = false;
-                        break;
-                    }
+                        return3:
+                        if(pause){
+                        switch(currentChoose)
+                        {
+                        case 1:
+                            pause = false;
+                            break;
+                        case 2:
+                            retry = true;
+                            pause = false;
+                            running = false;
+                            clicked = true;
+                            break;
+                        case 3:
+                            running = false;
+                            break;
+                        }
+                        }
                     break;
                     case SDLK_f:
                         if(player_getDead(player1)==false)
                             {
-                                Mix_PlayChannel(-1,combo1,0);
                                 player_setCurDoing(player1,3);
                                 player_setIsHitting(player1,true);
                                 player_setIsDoneHitting(player1,false);
@@ -1125,7 +1209,6 @@ int main(int argc, char* argv[])
                     case SDLK_KP_4:
                         if(player_getDead(player2)==false)
                             {
-                                Mix_PlayChannel(-1,combo1,0);
                                 player_setCurDoing(player2,3);
                                 player_setIsHitting(player2,true);
                                 player_setIsDoneHitting(player2,false);
@@ -1181,6 +1264,7 @@ int main(int argc, char* argv[])
                     player_setCurDoing(player2,6);
                 }
             }
+
            if(state[SDL_SCANCODE_RIGHT])
             {
                 if(player_getDead(player2)==false)
@@ -1383,17 +1467,17 @@ int main(int argc, char* argv[])
             player_setCanHit(player2,false);
         }
 
-        player_hit(player1,player2,-100,300);
-        player_hit(player2,player1,-100,300);
+        player_hit(player1,player2,-100,300,combo1);
+        player_hit(player2,player1,-100,300,combo1);
 
 
-        engine_outSideMap(player1);
+         engine_outSideMap(player1);
         engine_outSideMap(player2);
         player_jump(player1,deltaTime);
         player_jump(player2,deltaTime);
         engine_gravity(&gravityTimer,deltaTime, player1, ground1 );
         engine_gravity(&gravityTimer,deltaTime, player2, ground1 );
-        engine_clouds(cloud);
+        animation_clouds(cloud);
 
 
         if(pause==false)
@@ -1406,6 +1490,8 @@ int main(int argc, char* argv[])
 
             object_setObjectPositionW(health1,2.5*player_getHealth(player1));
             object_setObjectPositionW(health2,-2.5*player_getHealth(player2));
+            object_setObjectPositionW(energy1,2.5*player_getEnergy(player1));
+            object_setObjectPositionW(energy2,-2.5*player_getEnergy(player2));
 
         }
         if(player_getDead(player1))
@@ -1421,74 +1507,78 @@ int main(int argc, char* argv[])
         switch(player_getCurDoing(player1))
         {
         case 0:
-            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),5,6200,6700,0.15f,rin_frameHeight);
             break;
         case 1:
-            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,6200,6700,0.15f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),5,6200,6700,0.15f,rin_frameHeight);
             break;
         case 2:
-            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,5200,5700,0.25f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),5,5200,5700,0.25f,rin_frameHeight);
             break;
         case 4:
             if(player_getDead(player1)==false || player_getPlayerRectY(player1) != 1800)
             {
-                animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,1400,1800,0.1f,rin_frameHeight);
+                animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),4,1400,1800,0.1f,rin_frameHeight);
             }
             player_setDead(player1,true);
             break;
         case 5:
-            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,4600,5200,0.15f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),5,4600,5200,0.15f,rin_frameHeight);
             break;
         case 6:
-            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),5,4100,4600,0.15f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),5,4100,4600,0.15f,rin_frameHeight);
             break;
         case 3:
-            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),player_getPlayerRectPX(player1),4,-100,300,0.10f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player1),player_getPlayerRectPY(player1),4,-100,300,0.10f,rin_frameHeight);
             break;
         }
 
         switch(player_getCurDoing(player2))
         {
         case 0:
-            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,6200,6700,0.15f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),5,6200,6700,0.15f,rin_frameHeight);
             break;
         case 1:
-            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,6200,6700,0.15f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),5,6200,6700,0.15f,rin_frameHeight);
             break;
         case 2:
-            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,5200,5700,0.25f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),5,5200,5700,0.25f,rin_frameHeight);
             break;
         case 4:
             if(player_getDead(player2)==false || player_getPlayerRectY(player2) != 1800)
             {
-                animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),4,1400,1800,0.1f,rin_frameHeight);
+                animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),4,1400,1800,0.1f,rin_frameHeight);
             }
             player_setDead(player2,true);
             break;
         case 5:
-            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,4600,5200,0.15f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),5,4600,5200,0.15f,rin_frameHeight);
             break;
         case 6:
-            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),5,4100,4600,0.15f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),5,4100,4600,0.15f,rin_frameHeight);
             break;
         case 3:
-            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),player_getPlayerRectPX(player2),4,-100,300,0.10f,rin_frameHeight);
+            animation_create(player_getPFrameTime(player2),player_getPlayerRectPY(player2),4,-100,300,0.10f,rin_frameHeight);
             break;
         }
 
 
 
 
-        animation_create(object_getPFrameTime(river),object_getObjectRectPY(river),object_getObjectRectPX(river),3,-111,222,0.5f,river_frameHeight);
-        animation_create(object_getPFrameTime(ground1),object_getObjectRectPY(ground1),object_getObjectRectPX(ground1),0,-46,0,0.5f,46);
-        animation_create(object_getPFrameTime(transparency),object_getObjectRectPY(transparency),object_getObjectRectPX(transparency),0,-100,0,0.15,100);
-        animation_create(object_getPFrameTime(exit_2),object_getObjectRectPY(exit_2),object_getObjectRectPX(exit_2),0,-81,0,0.5f,81);
-        animation_create(object_getPFrameTime(btm),object_getObjectRectPY(btm),object_getObjectRectPX(btm),0,-80,0,0.5f,80);
-        animation_create(object_getPFrameTime(continuetext),object_getObjectRectPY(continuetext),object_getObjectRectPX(continuetext2),0,-79,0,0.5f,79);
-        animation_create(object_getPFrameTime(healthbar1),object_getObjectRectPY(healthbar1),object_getObjectRectPX(healthbar1),0,-79,0,0.5f,79);
-        animation_create(object_getPFrameTime(health1),object_getObjectRectPY(health1),object_getObjectRectPX(health1),0,-79,0,0.5f,79);
-        animation_create(object_getPFrameTime(healthbar2),object_getObjectRectPY(healthbar2),object_getObjectRectPX(healthbar2),0,-79,0,0.5f,79);
-        animation_create(object_getPFrameTime(health2),object_getObjectRectPY(health2),object_getObjectRectPX(health2),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(river),object_getObjectRectPY(river),3,-111,222,0.5f,river_frameHeight);
+        animation_create(object_getPFrameTime(ground1),object_getObjectRectPY(ground1),0,-46,0,0.5f,46);
+        animation_create(object_getPFrameTime(transparency),object_getObjectRectPY(transparency),0,-100,0,0.15,100);
+        animation_create(object_getPFrameTime(exit_2),object_getObjectRectPY(exit_2),0,-81,0,0.5f,81);
+        animation_create(object_getPFrameTime(btm),object_getObjectRectPY(btm),0,-80,0,0.5f,80);
+        animation_create(object_getPFrameTime(continuetext),object_getObjectRectPY(continuetext),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(healthbar1),object_getObjectRectPY(healthbar1),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(health1),object_getObjectRectPY(health1),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(healthbar2),object_getObjectRectPY(healthbar2),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(health2),object_getObjectRectPY(health2),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(energy2),object_getObjectRectPY(energy2),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(energy1),object_getObjectRectPY(energy1),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(energybar1),object_getObjectRectPY(energybar1),0,-79,0,0.5f,79);
+        animation_create(object_getPFrameTime(energybar2),object_getObjectRectPY(energybar2),0,-79,0,0.5f,79);
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer,background,NULL,NULL);
@@ -1501,6 +1591,10 @@ int main(int argc, char* argv[])
         animation_show(renderer,healthbar1,NULL,player_getLeft(healthbar1));
         animation_show(renderer,health2,NULL,player_getLeft(health2));
         animation_show(renderer,healthbar2,NULL,player_getLeft(healthbar2));
+        animation_show(renderer,energy2,NULL,player_getLeft(energy2));
+        animation_show(renderer,energy1,NULL,player_getLeft(energy1));
+        animation_show(renderer,energybar1,NULL,player_getLeft(energy1));
+        animation_show(renderer,energybar2,NULL,player_getLeft(energy2));
 
         if(pause==true)
         {
@@ -1529,7 +1623,7 @@ int main(int argc, char* argv[])
 
     object_objectRemove(exit_22);
     object_objectRemove(exit_2);
-    object_objectRemove(btm);
+    object_objectRemove(btm2);
     object_objectRemove(btm);
     object_objectRemove(continuetext2);
     object_objectRemove(continuetext);
@@ -1538,6 +1632,15 @@ int main(int argc, char* argv[])
     object_objectRemove(p1win2);
     object_objectRemove(p2win);
     object_objectRemove(p2win2);
+
+    object_objectRemove(health1);
+    object_objectRemove(health2);
+    object_objectRemove(healthbar1);
+    object_objectRemove(healthbar2);
+    object_objectRemove(energy1);
+    object_objectRemove(energy2);
+    object_objectRemove(energybar1);
+    object_objectRemove(energybar2);
 
     p1win = NULL;
     p2win = NULL;
@@ -1551,9 +1654,6 @@ int main(int argc, char* argv[])
     continuetext = NULL;
     transparency = NULL;
 
-    SDL_GameControllerClose(controller1);
-    controller1 = NULL;
-
     IMG_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyTexture(background);
@@ -1563,6 +1663,9 @@ int main(int argc, char* argv[])
     renderer = NULL;
     window = NULL;
 }
+
+SDL_GameControllerClose(controller1);
+controller1 = NULL;
 
 Mix_FreeMusic(backgroundSound);
 Mix_FreeChunk(combo1);
