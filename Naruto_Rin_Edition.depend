@@ -50,7 +50,7 @@
 	"object.h"
 	"homescreen.h"
 
-1516605572 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.h
+1516607053 c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.h
 	"object.h"
 	<stdlib.h>
 	<stdio.h>
@@ -78,7 +78,7 @@
 
 1516380648 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\settings.c
 
-1516605587 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.c
+1516607098 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\utilities.c
 	"utilities.h"
 
 1516604595 source:c:\users\eduard stetco\desktop\naruto_rin_edition\naruto_rin_edition\player.c

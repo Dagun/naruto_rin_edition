@@ -1,6 +1,6 @@
 #include "object.h"
 
-struct object {
+struct object {/*
     float frameTime;
     float moveSpeed;
     int textureHeight;
@@ -9,7 +9,7 @@ struct object {
     SDL_Texture *texture;
     SDL_Rect objectRect;
     SDL_Rect objectPosition;
-    /*
+    */
     float frameTime;
     bool left;
     float moveSpeed;
@@ -18,7 +18,7 @@ struct object {
     int textureWidth;
     SDL_Texture *texture;
     SDL_Rect objectRect;
-    SDL_Rect objectPosition;*/
+    SDL_Rect objectPosition;
 };
 
 PObject object_create() {
