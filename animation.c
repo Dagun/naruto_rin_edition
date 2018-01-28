@@ -1,12 +1,11 @@
 #include "animation.h"
 
 void animation_create(PPlayer ply, PObject obj,float *frameTime,int y,int frames,int frameBegin, int frameEnd,float speed, int frameHeight){
-    printf("%d-\n",y);
     if(*frameTime>= speed) {
         *frameTime=0;
         if(y >= frameEnd || y < frameBegin)
         {
-          if(ply!=NULL && obj == NULL) {
+         if(ply!=NULL && obj == NULL) {
             player_setPlayerRectY(ply, frameBegin);
           }
           if(ply==NULL && obj != NULL) {

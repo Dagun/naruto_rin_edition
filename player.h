@@ -14,7 +14,7 @@
 
 typedef struct player *PPlayer;
 
-int player_hit(PPlayer player,PPlayer player2, int frameBegin, int frameEnd, Mix_Chunk *combo1);
+void player_hit(PPlayer player,PPlayer player2, int frameBegin, int frameEnd, Mix_Chunk *combo1);
 
 void player_jump(PPlayer player, float deltaTime);
 

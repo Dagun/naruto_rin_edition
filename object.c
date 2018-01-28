@@ -1,21 +1,11 @@
 #include "object.h"
 
-struct object {/*
+struct object {
     float frameTime;
     float moveSpeed;
     int textureHeight;
     int textureWidth;
     bool left;
-    SDL_Texture *texture;
-    SDL_Rect objectRect;
-    SDL_Rect objectPosition;
-    */
-    float frameTime;
-    bool left;
-    float moveSpeed;
-    int curDoing;
-    int textureHeight;
-    int textureWidth;
     SDL_Texture *texture;
     SDL_Rect objectRect;
     SDL_Rect objectPosition;
@@ -70,10 +60,10 @@ void object_setObjectRectW(PObject object,int value) {
 void object_setObjectRectH(PObject object, int value) {
     object->objectRect.h = value;
 }
-int object_getObjectRectPX(PObject object) {
+int* object_getObjectRectPX(PObject object) {
     return &(object->objectRect.x);
 }
-int object_getObjectRectPY(PObject object) {
+int* object_getObjectRectPY(PObject object) {
     return &(object->objectRect.y);
 }
 int object_getObjectRectX(PObject object) {

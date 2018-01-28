@@ -10,7 +10,7 @@
 #endif
 
 extern const int rin_strength;
-extern const int rin_jumpDelay;
+extern const float rin_jumpDelay;
 
 struct player {
     float frameTime;
@@ -126,7 +126,7 @@ bool player_getCanJump(PPlayer player) {
   return player -> canJump;
 }
 
-int player_hit(PPlayer player, PPlayer player2, int frameBegin, int frameEnd, Mix_Chunk *combo1) {
+void player_hit(PPlayer player, PPlayer player2, int frameBegin, int frameEnd, Mix_Chunk *combo1) {
   if (player_getIsDoneHitting(player) == false && player_getIsHitting(player) == true && player_getCurDoing(player) == 3) {
     if (player_getCurDoing(player) == 3) {
       if (player_getPlayerRectY(player) <= frameEnd && player_getPlayerRectY(player) >= frameBegin) {
@@ -155,10 +155,12 @@ int player_hit(PPlayer player, PPlayer player2, int frameBegin, int frameEnd, Mi
 }
 
 void player_jump(PPlayer player, float deltaTime) {
+   // printf("%d-%d-%d\n",player_getCanJump(player),player_getOnGround(player),player_getIsDoneJump(player));
   if (player_getCanJump(player) == true && player_getOnGround(player) == true || player_getIsDoneJump(player) == false) {
     player_setJumpTime(player, player_getJumpTime(player) - deltaTime);
     if (player_getJumpTime(player) < rin_jumpDelay && player_getJumpTime(player) > 0.01) {
-      int tmp = player_getPlayerPositionY(player) - 15;
+        int tmp;
+        tmp = player_getPlayerPositionY(player) - 15;
       player_setIsDoneJump(player, false);
       player_setPlayerPositionY(player, tmp);
       player_setCurDoing(player, 6);
@@ -295,7 +297,7 @@ void player_setTexturePath(PPlayer player, SDL_Renderer *renderer, char *path) {
   player -> texture = LoadTexture(path, renderer);
 }
 
-SDL_Rect *player_getPlayerRect(PPlayer player) {
+SDL_Rect* player_getPlayerRect(PPlayer player) {
   return &(player -> playerRect);
 }
 void player_setPlayerRect(PPlayer player, SDL_Rect value) {

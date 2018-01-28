@@ -50,8 +50,8 @@ void object_setObjectPositionW(PObject object, int value);
 void object_setObjectPositionH(PObject object, int value);
 
 void object_setObjectRectX(PObject object, int value);
-int object_getObjectRectPX(PObject object);
-int object_getObjectRectPY(PObject object);
+int* object_getObjectRectPX(PObject object);
+int* object_getObjectRectPY(PObject object);
 int object_getObjectRectX(PObject object);
 int object_getObjectRectY(PObject object);
 int object_getObjectPositionY(PObject object);
